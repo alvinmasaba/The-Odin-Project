@@ -42,18 +42,13 @@ def check_for_saved_games
 end
 
 def pick_game
-  selection = gets.chomp
-
-  if selection == '1'
+  case gets.chomp
+  when '1'
     game = Game.new
-
-  elsif selection == '2'
+  when '2'
     game = check_for_saved_games
-
   else
-    puts "
-  Please enter 1 or 2:
-    "
+    puts "\nPlease enter 1 or 2:"
     game = pick_game
   end
 

@@ -11,4 +11,4 @@ class ComputerGuess
   def cpu_guess
     (1..4).map { COLORS.sample }
   end
-end  
+end

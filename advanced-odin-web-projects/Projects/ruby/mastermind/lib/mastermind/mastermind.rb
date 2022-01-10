@@ -5,14 +5,13 @@ module MasterMind
 
   def num_human_players(game)
     puts "Enter the number of human players (1 or 2):\n\n"
-    num = gets.chomp.to_i
-    case num
-    when 0 
+    case gets.chomp.to_i
+    when 0
       [ComputerPlayer.new(game), ComputerPlayer.new(game)]
     when 1
-      [HumanPlayer.new(game), ComputerPlayer.new(game)] 
-    when 2 
-      [HumanPlayer.new(game), HumanPlayer.new(game)] 
+      [HumanPlayer.new(game), ComputerPlayer.new(game)]
+    when 2
+      [HumanPlayer.new(game), HumanPlayer.new(game)]
     else
       num_human_players(game)
     end
@@ -43,7 +42,7 @@ module MasterMind
     game.code_maker = players.reduce { |x, player| player.is_code_breaker ? player : x }
     game.code_breaker = players.reduce { |x, player| player.is_code_maker ? player : x }
   end
-  
+
   def set_players(game, players)
     # Sets the codemaker and codebreaker for a match
     game.code_maker = players.reduce { |x, player| player.is_code_maker ? player : x }
@@ -57,6 +56,6 @@ module MasterMind
   def set_num_rounds(game)
     puts "\nEnter the number of rounds you wish to play (1-12): \n\n"
     num_rounds = gets.chomp.to_i
-    num_rounds.between?(1,12) ? game.num_rounds = num_rounds : set_num_rounds
+    num_rounds.between?(1, 12) ? game.num_rounds = num_rounds : set_num_rounds
   end
 end

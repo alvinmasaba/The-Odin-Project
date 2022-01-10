@@ -22,7 +22,7 @@ class HumanPlayer < Player
     end
   end
 
-  def input_guess 
+  def input_guess
     puts "\n#{@name}, it's time to make your guess!"
     puts "\nWhen prompted enter: #{(0..6).map { |i| "#{i} for #{@game.COLORS[i]}" }}"
     (1..4).map do |n|

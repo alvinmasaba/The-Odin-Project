@@ -7,4 +7,3 @@ puts "What's your last name?"
 last_name = gets.chomp.strip
 
 puts first_name << " #{last_name}"
-

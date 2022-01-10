@@ -23,11 +23,11 @@ def clean_phone_number(number)
 end
 
 def find_reg_hour(reg_date)
-  Time.strptime(reg_date, "%m/%d/%y %k:%M").strftime("%I %p")
+  Time.strptime(reg_date, '%m/%d/%y %k:%M').strftime('%I %p')
 end
 
 def find_reg_day(reg_date)
-  Time.strptime(reg_date, "%m/%d/%y %k:%M").strftime("%A")
+  Time.strptime(reg_date, '%m/%d/%y %k:%M').strftime('%A')
 end
 
 def update_hash(hash, val)
@@ -39,7 +39,9 @@ def update_hash(hash, val)
 end
 
 def find_max(hash)
-  hash.reduce({}) { |h, (k, v)| (h[v] ||= []) << k; h }.max
+  hash.each_with_object({}) do |(k, v), h|
+    (h[v] ||= []) << k
+  end.max
 end
 
 def legislators_by_zipcode(zip)
@@ -50,9 +52,9 @@ def legislators_by_zipcode(zip)
     civic_info.representative_info_by_address(
       address: zip,
       levels: 'country',
-      roles: ['legislatorUpperBody', 'legislatorLowerBody']
+      roles: %w[legislatorUpperBody legislatorLowerBody]
     ).officials
-  rescue
+  rescue StandardError
     'You can find your representatives by visiting www.commoncause.org/take-action/find-elected-officials'
   end
 end

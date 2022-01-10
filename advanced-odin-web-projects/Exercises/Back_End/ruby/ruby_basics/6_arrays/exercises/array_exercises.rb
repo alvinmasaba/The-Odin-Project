@@ -1,46 +1,44 @@
 def nil_array(number)
   # return an array containing `nil` the given number of times
-  arr = Array.new(number)
-  return arr
+  Array.new(number)
 end
 
 def first_element(array)
   # return the first element of the array
-  return array[0]
+  array[0]
 end
 
 def third_element(array)
   # return the third element of the array
-  return array[2]
+  array[2]
 end
 
 def last_three_elements(array)
   # return the last 3 elements of the array
-  if array.size >= 3 
-    return array[-3..-1]
-  end
-  return array
+  return array[-3..-1] if array.size >= 3
+
+  array
 end
 
 def add_element(array)
   # add an element (of any value) to the array
-  array << "alvin"
+  array << 'alvin'
 end
 
 def remove_last_element(array)
   # Step 1: remove the last element from the array
   array.pop
   # Step 2: return the array (because Step 1 returns the value of the element removed)
-  return array
+  array
 end
 
 def remove_first_three_elements(array)
   # Step 1: remove the first three elements
-  3.times do 
+  3.times do
     array.shift
   end
   # Step 2: return the array (because Step 1 returns the values of the elements removed)
-  return array
+  array
 end
 
 def array_concatenation(original, additional)
@@ -77,4 +75,3 @@ def join(array, separator)
   # return the result of joining the array with the separator
   array.join(separator)
 end
-

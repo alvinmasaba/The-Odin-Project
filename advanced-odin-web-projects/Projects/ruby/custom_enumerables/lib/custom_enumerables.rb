@@ -37,11 +37,8 @@ module Enumerable
     # Call my_each on arr to pass each item to the block
 
     to_a.my_each do |item|
-
       # if the expression in the block evaluates to true when given item, push to true_values
-      if yield item
-        true_values << item
-      end
+      true_values << item if yield item
     end
 
     true_values
@@ -51,13 +48,13 @@ module Enumerable
     # if block given, pass the array to my_each and return true if any value evaluates to true in the block
     if block_given?
       to_a.my_each { |item| return true if yield item }
-    
-    # if argument given, return true if any elements in self === argument
+
+      # if argument given, return true if any elements in self === argument
     elsif arg != []
       to_a.my_each { |item| return true if arg[0] === item }
 
     # if no block or argument given (arg is an empty array), return true if any elements in self evaluate to true
-    else 
+    else
       to_a.my_each { |item| return true if item }
     end
 
@@ -68,7 +65,7 @@ module Enumerable
     # if block given, pass the array to my_each and return false if any value evaluates to true in the block
     if block_given?
       to_a.my_each { |item| return false if yield item }
-    
+
     # if argument given, return false if any elements in self === argument
     elsif arg != []
       to_a.my_each { |item| return false if arg[0] === item }

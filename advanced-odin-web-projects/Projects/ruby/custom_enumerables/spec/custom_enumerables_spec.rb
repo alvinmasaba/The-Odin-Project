@@ -25,9 +25,9 @@ RSpec.describe 'Custom Enumerables' do
       expect(numbers.my_each { |item| puts item }).to eql(numbers.each { |item| puts item })
     end
 
-    # it 'works with when there is no block' do
-    #  numbers = [1,2,3,4,5]
-    #  expect(numbers.my_each).to eql(numbers.each)
-    # end
+    it 'works with when there is no block' do
+      numbers = [1, 2, 3, 4, 5]
+      expect(numbers.my_each.class).to eql(Enumerator)
+    end
   end
 end

@@ -9,7 +9,7 @@ module Enumerable
 
     return to_enum unless block_given?
 
-    arr.count.times do
+    arr.size.times do
       yield arr[i]
       i += 1
     end
@@ -23,7 +23,7 @@ module Enumerable
 
     return to_enum unless block_given?
 
-    arr.count.times do
+    arr.size.times do
       yield arr[i], i
       i += 1
     end
@@ -34,8 +34,9 @@ module Enumerable
   def my_select
     true_values = []
 
-    # Call my_each on arr to pass each item to the block
+    return to_enum unless block_given?
 
+    # Call my_each on arr to pass each item to the block
     to_a.my_each do |item|
       # if the expression in the block evaluates to true when given item, push to true_values
       true_values << item if yield item
@@ -71,10 +72,39 @@ module Enumerable
       to_a.my_each { |item| return false if arg[0] === item }
 
     # if no block or argument given (arg is an empty array), return false if any elements in self evaluate to true
-    else 
+    else
       to_a.my_each { |item| return false if item }
     end
 
     true
+  end
+
+  def my_count(*arg)
+    i = 0
+
+    # if block given, pass each item in array to my_each and increment i for each element that yields a true value
+    if block_given?
+      to_a.my_each { |item| i += 1 if yield item }
+
+    # if arg given, increment i for each element that is equal to arg
+    elsif arg != []
+      to_a.my_each { |item| i += 1 if arg[0] === item }
+
+    else
+      to_a.my_each { i += 1 }
+    end
+
+    i
+  end
+
+  def my_map
+    return to_enum unless block_given?
+
+    new_arr = []
+
+    # Push to new_arr the yield of each item after it is passed to the block
+    to_a.my_each { |item| new_arr << (yield item) }
+
+    new_arr
   end
 end

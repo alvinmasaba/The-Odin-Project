@@ -97,13 +97,18 @@ module Enumerable
     i
   end
 
-  def my_map
-    return to_enum unless block_given?
-
+  def my_map(&my_proc)
     new_arr = []
+    if block_given?
+      # Push to new_arr the yield of each item after it is passed to the block
+      to_a.my_each { |item| new_arr << (yield item) }
 
-    # Push to new_arr the yield of each item after it is passed to the block
-    to_a.my_each { |item| new_arr << (yield item) }
+    elsif my_proc.instance_of?(Proc)
+      to_a.my_each { |item| new_arr << my_proc.call(item) }
+    
+    else
+      to_enum
+    end
 
     new_arr
   end

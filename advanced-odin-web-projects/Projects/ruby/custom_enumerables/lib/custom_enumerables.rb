@@ -123,7 +123,7 @@ module Enumerable
         arr = to_a
       end
     when 2
-      memo = to_a[0]
+      memo = arg[0]
       arr = to_a
       op = arg[1]
     end

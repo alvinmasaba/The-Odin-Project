@@ -108,35 +108,18 @@ module Enumerable
     new_arr
   end
 
-  def reduce_helper(arg)
-    case arg.size
-    when 0
+  def my_reduce(*args)
+    # Accumulator 'memo' takes on the value of first item in self unless a value is passed to args 
+    if args[0].instance_of?(Symbol) || args.size == 0
       memo = to_a[0]
       arr = to_a[1..-1]
-    when 1
-      if arg[0].instance_of?(Symbol)
-        memo = to_a[0]
-        arr = to_a[1..-1]
-        op = arg[0]
-      else
-        memo = arg[0]
-        arr = to_a
-      end
-    when 2
-      memo = arg[0]
+    else
+      memo = args[0]
       arr = to_a
-      op = arg[1]
     end
-
-    [memo, arr, op]
-  end
-
-  def my_reduce(*arg)
-    params = reduce_helper(arg)
-
-    memo = params[0]
-    arr = params[1]
-    op = params[2]
+    
+    # Control for presence of operator in args
+    op = args.size == 2 ? args[1] : args[0]
 
     if block_given?
       arr.my_each { |item| memo = yield memo, item }

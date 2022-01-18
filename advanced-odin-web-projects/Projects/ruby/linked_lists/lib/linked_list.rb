@@ -1,52 +1,64 @@
 # frozen_string_literal: true
 
-require_relative './node.rb'
+require_relative './node'
 
+# Imitates the functionality of a traditional linked list
 class LinkedList
   attr_accessor :head, :tail, :nodes
-  
-  def initialize(head = nil, tail = nil)
-    @head = head
-    @tail = tail
-    @nodes = []
+
+  def initialize(nodes = [])
+    if nodes.empty?
+      @head = nil
+      @tail = nil
+      @nodes = nodes
+    else
+      @head = nodes[0]
+      @tail = nodes[-1]
+      @nodes = []
+      nodes.each_with_index { |value, i| @nodes << Node.new(value, nodes[i + 1]) }
+    end
   end
 
   def append(value)
-    @tail = Node.new(value, nil, @nodes.size)
-    @nodes << @tail
+    if @nodes.empty?
+      @nodes << Node.new(value, nil)
+      @head = value
+    elsif @tail.nil?
+      @nodes << Node.new(value, nil)
+      @nodes[0].next_node = value
+    else
+      # Make the previous tail point to the value to be appended
+      @nodes[-1].next_node = value
+      # Append the new value as a node instance to the list of nodes with value 'value' and next_node 'nil'
+      @nodes << Node.new(value, nil)
+    end
+    # Set @tail to value
+    @tail = value
   end
 
   def prepend(value)
-    @head = Node.new(value, @head, 0)
+    if @nodes.empty?
+      # Add a new node to the front of the list with value 'value' and next_node 'nil'
+      @nodes.unshift(Node.new(value))
+    else
+      @nodes.unshift(Node.new(value, @head))
+    end
 
-    # increment the index number of each node except the head
-    @nodes.each { |node| node.index += 1}
-
-    # add head to the front of the list
-    @nodes.unshift(@head)
+    @head = value
   end
 
   def size
     @nodes.size
   end
 
-  def head
-    @head.value
-  end
-
-  def tail
-    @tail.value
-  end
-
-  def at(idx)
-    node = @nodes.find { |node| node.index == idx }
-    node.value
+  def at(index)
+    @nodes[index].value
   end
 
   def pop
-    node = @tail.value
+    node = @tail
     @nodes = @nodes[0...-1]
-    @tail = @nodes[-1]
+    @tail = @nodes[-1].value
     node
   end
 
@@ -56,12 +68,15 @@ class LinkedList
 
   def find(value)
     result = nil
-    @nodes.each { |node| node.index == value ? node.value : result }
+    @nodes.each_with_index { |node, i| node.value == value ? result = i : result }
+    result
   end
 
   def to_s
-    string = ""
+    string = ''
     @nodes.each do |node|
-      string += ""
-
+      string += "( #{node.value} ) -> "
+    end
+    string += 'nil'
+  end
 end

@@ -87,7 +87,7 @@ class LinkedList
     index = index > @nodes.size ? @nodes.size : index
 
     if index.zero?
-      self.prepend(value)
+      prepend(value)
     else
       @nodes.insert(Node.new(value, @nodes[index].value))
       @nodes[index - 1].next_node = value
@@ -98,7 +98,15 @@ class LinkedList
 
   def remove_at(index)
     if index == @nodes.size - 1
-      self.pop
+      pop
+    elsif index.zero?
+      @nodes = @nodes[1..-1]
+      @head = @nodes[0].value
+    else
+      @nodes[index - 1].next_node = @nodes[index + 1].value
+      @nodes = @nodes.slice(index)
     end
 
+    @nodes.to_s
+  end
 end

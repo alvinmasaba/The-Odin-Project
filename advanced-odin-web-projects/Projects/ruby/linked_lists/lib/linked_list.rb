@@ -34,6 +34,7 @@ class LinkedList
     end
     # Set @tail to value
     @tail = value
+    @nodes.to_s
   end
 
   def prepend(value)
@@ -45,6 +46,7 @@ class LinkedList
     end
 
     @head = value
+    @nodes.to_s
   end
 
   def size
@@ -59,6 +61,7 @@ class LinkedList
     node = @tail
     @nodes = @nodes[0...-1]
     @tail = @nodes[-1].value
+    @nodes[-1].next_node = nil
     node
   end
 
@@ -79,4 +82,23 @@ class LinkedList
     end
     string += 'nil'
   end
+
+  def insert_at(value, index)
+    index = index > @nodes.size ? @nodes.size : index
+
+    if index.zero?
+      self.prepend(value)
+    else
+      @nodes.insert(Node.new(value, @nodes[index].value))
+      @nodes[index - 1].next_node = value
+    end
+
+    @nodes.to_s
+  end
+
+  def remove_at(index)
+    if index == @nodes.size - 1
+      self.pop
+    end
+
 end

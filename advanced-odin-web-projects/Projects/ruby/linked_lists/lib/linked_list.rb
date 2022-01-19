@@ -72,7 +72,7 @@ class LinkedList
       i += 1
     end
 
-    current_node.value
+    current_node
   end
 
   def pop
@@ -83,7 +83,7 @@ class LinkedList
     current_node = current_node.next_node until current_node.next_node == @tail
     current_node.next_node = nil
     @tail = current_node
-    popped_node.value
+    popped_node
   end
 
   def contains?(value)
@@ -126,7 +126,7 @@ class LinkedList
       current_node = current_node.next_node
     end
 
-    string.concat('nil')
+    string + "( #{@tail.value} ) -> nil "
   end
 
   def insert_at(value, index)
@@ -148,7 +148,7 @@ class LinkedList
     elsif index.zero?
       @head = @head.next_node
     else
-      at(index - 1).next_node = at(index + 1) 
+      at(index - 1).next_node = at(index + 1)
     end
   end
 end

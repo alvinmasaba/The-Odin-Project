@@ -2,7 +2,7 @@
 
 # instances of class node serve as nodes an instance of a LinkedList class object
 class Node
-  attr_accessor :value, :next_node, :index
+  attr_accessor :value, :next_node
 
   def initialize(value = nil, next_node = nil)
     @value = value

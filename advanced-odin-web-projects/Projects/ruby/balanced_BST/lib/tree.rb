@@ -5,11 +5,11 @@ require 'pry-byebug'
 
 # Tree class for balanced binary search tree
 class Tree
-  attr_accessor :root, :array
+  attr_accessor :root
 
   def initialize(array = [])
-    @array = array.sort.uniq
-    @root = build_tree(@array)
+    array = array.sort.uniq
+    @root = build_tree(array)
   end
 
   def build_tree(array)
@@ -144,12 +144,12 @@ class Tree
   def height(node, depth = 0)
     node = find(node)
 
-    # Traverse the left subtree until a leaf node is reached
+    # Traverse the left subtree until a leaf node is reached, incrementing depth
+    # with each recursive step. Then return depth. Do the same for the right subtree.
     left = node.left_child.nil? ? depth : height(node.left_child.data, depth + 1)
-    # Traverse the right subtree until a leaf node is reached
     right = node.right_child.nil? ? depth : height(node.right_child.data, depth + 1)
 
-    # Return the greater of right and left depth
+    # Return the greater of right and left depth.
     if left >= right
       left
     elsif right > left
@@ -159,17 +159,43 @@ class Tree
     end
   end
 
+  def depth(node, root = @root, dist = 0)
+    return if root.nil?
+
+    # Traverse the left subtree incrementing distance with each step.
+    # Return dist when node is found.
+    if root.data > node
+      dist = depth(node, root.left_child, dist + 1)
+    elsif root.data < node
+      dist = depth(node, root.right_child, dist + 1)
+    else
+      dist
+    end
+
+    dist
+  end
+
+  def balanced?(balanced: true)
+    # Traverse the tree inorder.
+    inorder do |node|
+      # Find the difference between the height of left subtree and right subtree.
+      # If it is greater than 1, change balanced to false.
+      left_height = node.left_child ? height(node.left_child.data) : -1
+      right_height = node.right_child ? height(node.right_child.data) : -1
+
+      diff = left_height - right_height
+
+      balanced = (diff > 1) || (diff < -1) ? false : balanced
+    end
+
+    balanced
+  end
+
   def traverse_tree(root = @root, nodes = [])
     nodes << root.data
     traverse_tree(root.left_child, nodes) if root.left_child
     traverse_tree(root.right_child, nodes) if root.right_child
     nodes
-  end
-
-  def rebalance_tree
-    @array = traverse_tree.sort
-    @root = build_tree
-    pretty_print
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)

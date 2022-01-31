@@ -192,7 +192,7 @@ class Tree
   end
 
   def rebalance
-    array = traverse_tree
+    array = traverse_tree.sort.uniq
     @root = build_tree(array)
     pretty_print
   end

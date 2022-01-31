@@ -16,12 +16,12 @@ class Tree
     return nil if array.empty?
 
     mid = (array.size - 1) / 2
-    root = Node.new(array[mid])
+    node = Node.new(array[mid])
 
-    root.left_child = build_tree(array[0...mid])
-    root.right_child = build_tree(array[(mid + 1)..-1])
+    node.left_child = build_tree(array[0...mid])
+    node.right_child = build_tree(array[(mid + 1)..-1])
 
-    root
+    node
   end
 
   def insert(val, root = @root)
@@ -191,10 +191,16 @@ class Tree
     balanced
   end
 
-  def traverse_tree(root = @root, nodes = [])
-    nodes << root.data
-    traverse_tree(root.left_child, nodes) if root.left_child
-    traverse_tree(root.right_child, nodes) if root.right_child
+  def rebalance
+    array = traverse_tree
+    @root = build_tree(array)
+    pretty_print
+  end
+
+  def traverse_tree(node = @root, nodes = [])
+    nodes << node.data
+    traverse_tree(node.left_child, nodes) if node.left_child
+    traverse_tree(node.right_child, nodes) if node.right_child
     nodes
   end
 

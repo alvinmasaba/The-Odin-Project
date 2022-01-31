@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require_relative './node'
-require 'pry-byebug'
 
 # Tree class for balanced binary search tree
 class Tree
@@ -81,12 +80,12 @@ class Tree
   def level_order(node = @root, queue = [], tree = [], &block)
     return if node.nil?
 
-    # Push node to the tree and the children to the queue
+    # Push node to the tree and the children to the queue.
     tree << node.data
     queue << node.left_child unless node.left_child.nil?
     queue << node.right_child unless node.right_child.nil?
 
-    # Yield if a block is given
+    # Yield if a block is given.
     if block_given?
       yield node
     elsif queue.empty?
@@ -100,10 +99,10 @@ class Tree
     # Left - Root - Right
     return nil if node.nil?
 
-    # Go to the left sbutree until a leafnode is reached
+    # Go to the left sbutree until a leafnode is reached.
     inorder(node.left_child, tree, &block) if node.left_child
 
-    # Yield if block given, else push node data to tree
+    # Yield if block given, else push node data to tree.
     block_given? ? (yield node) : tree << node.data
 
     inorder(node.right_child, tree, &block)
@@ -115,7 +114,7 @@ class Tree
     # Root - Left - Right
     return nil if node.nil?
 
-    # Pass node to the block
+    # Pass node to the block.
     if block_given?
       yield node
     else
@@ -194,7 +193,6 @@ class Tree
   def rebalance
     array = traverse_tree.sort.uniq
     @root = build_tree(array)
-    pretty_print
   end
 
   def traverse_tree(node = @root, nodes = [])

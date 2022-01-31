@@ -64,6 +64,20 @@ class Tree
     root
   end
 
+  def find(value, node = @root)
+    return nil if node.nil?
+
+    if node.data == value
+      node
+    elsif node.data < value
+      node = find(value, node.right_child)
+    elsif node.data > value
+      node = find(value, node.left_child)
+    end
+
+    node
+  end
+
   def level_order(node = @root, queue = [], tree = [], &block)
     return if node.nil?
 
@@ -80,33 +94,6 @@ class Tree
     end
 
     level_order(queue.shift, queue, tree, &block)
-  end
-
-  def traverse_tree(root = @root, nodes = [])
-    nodes << root.data
-    traverse_tree(root.left_child, nodes) if root.left_child
-    traverse_tree(root.right_child, nodes) if root.right_child
-    nodes
-  end
-
-  def rebalance_tree
-    @array = traverse_tree.sort
-    @root = build_tree
-    pretty_print
-  end
-
-  def find(value, node = @root)
-    return nil if node.nil?
-
-    if node.data == value
-      node
-    elsif node.data < value
-      node = find(value, node.right_child)
-    elsif node.data > value
-      node = find(value, node.left_child)
-    end
-
-    node
   end
 
   def inorder(node = @root, tree = [], &block)
@@ -152,6 +139,37 @@ class Tree
     block_given? ? (yield node) : tree << node.data
 
     tree unless tree.none?
+  end
+
+  def height(node, depth = 0)
+    node = find(node)
+
+    # Traverse the left subtree until a leaf node is reached
+    left = node.left_child.nil? ? depth : height(node.left_child.data, depth + 1)
+    # Traverse the right subtree until a leaf node is reached
+    right = node.right_child.nil? ? depth : height(node.right_child.data, depth + 1)
+
+    # Return the greater of right and left depth
+    if left >= right
+      left
+    elsif right > left
+      right
+    else
+      depth
+    end
+  end
+
+  def traverse_tree(root = @root, nodes = [])
+    nodes << root.data
+    traverse_tree(root.left_child, nodes) if root.left_child
+    traverse_tree(root.right_child, nodes) if root.right_child
+    nodes
+  end
+
+  def rebalance_tree
+    @array = traverse_tree.sort
+    @root = build_tree
+    pretty_print
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)

@@ -14,4 +14,13 @@ class Node
     @left_child = left
     @right_child = right
   end
+
+  def children
+    return 0 if nil?
+
+    children = 0
+    children += 1 if left_child
+    children += 1 if right_child
+    children
+  end
 end

@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
-require_relative './board_square'
+require_relative './board/board_square'
+require_relative './board/knights_module'
 
 # Class to create gameboard object
 class Board
-  attr_accessor :board
+  include Knights
+
+  attr_accessor :board, :knight
 
   def initialize
     @board = create_board
@@ -23,5 +26,17 @@ class Board
     end
 
     position_board
+  end
+
+  def create_knight(position)
+    # If the given position is valid, create a new knight with its current position
+    # set to the board square with matching coordinates.
+    @knight = Knight.new(place_knight(position)) if valid_pos?(position)
+  end
+
+  private
+
+  def place_knight(position)
+    @board.find { |sqr| sqr.coordinates == position }
   end
 end

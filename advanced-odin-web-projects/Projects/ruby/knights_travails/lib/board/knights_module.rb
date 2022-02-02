@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Multi-class helper functions
 module Knights
   def valid_pos?(arr)
     # Return arr if it contains exactly 2 integers which are both between 1 and 8.

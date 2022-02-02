@@ -8,13 +8,14 @@ class Board
     # mixin
     include Knights
 
-    attr_accessor :coordinates, :contains_knight, :incoming, :outgoing
+    attr_accessor :coordinates, :contains_knight, :incoming, :outgoing, :dist_from_pos
 
     def initialize(pos)
       @coordinates = valid_pos?(pos)
       @contains_knight = false
       @incoming = []
       @outgoing = []
+      @dist_from_pos = 0
     end
   end
 end

@@ -37,7 +37,10 @@ class Board
     square = place_knight(position)
     square.contains_knight = true
     @knight = Knight.new(square)
+    build_move_tree(knight.current_pos)
   end
+
+  def knight_moves() end
 
   private
 
@@ -45,20 +48,21 @@ class Board
     @board.find { |sqr| sqr.coordinates == position }
   end
 
-  def find_moves(knight = @knight)
-    # Make the current position the root
-    root = knight.current_pos
-    x = root.coordinates[0]
-    y = root.coordinates[1]
-
+  def find_adjacent_moves(pos, depth)
     @board.each do |sqr|
-      # Check if our root points to the square, if so, update incoming for square
-      # and outgoing for the root.
-      if points_to?(x, y, sqr.coordinates[0], sqr.coordinates[1])
-        sqr.incoming << root
-        root.outgoing << sqr
-      end
+      # Check that root points to the square
+      next unless points_to?(pos.coordinates[0], pos.coordinates[1], sqr.coordinates[0], sqr.coordinates[1])
+
+      pos.outgoing << sqr
+      sqr.incoming << pos
+      sqr.dist_from_pos += depth
     end
   end
 
+  def build_move_tree(square, depth = 1)
+    return if square == knight.current.pos && depth.positive?
+
+    find_adjacent_moves(square, depth)
+    square.outgoing.each { |child| build_move_tree(child, depth + 1) }
+  end
 end

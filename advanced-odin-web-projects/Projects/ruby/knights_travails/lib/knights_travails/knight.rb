@@ -19,12 +19,7 @@ class Knight
   # starting from its position.
   def build_move_tree(root = @position)
     return if root == @position
-
-
-
-
-
-
+  end
 
   def find_moves(position)
     moves = []
@@ -45,6 +40,6 @@ class Knight
     moves << [position[0] + 2, position[1] + 1]
     moves << [position[0] + 2, position[1] - 1]
 
-    moves.reject { |move| !move.between?
+    moves.reject { |move| !move.between? }
   end
 end

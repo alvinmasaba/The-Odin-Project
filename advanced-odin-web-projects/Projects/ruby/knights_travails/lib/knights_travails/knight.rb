@@ -9,7 +9,7 @@ class Knight
       @position = position
     else
       @position = [4,4]
-      puts "Invalid position, placing knight at the middle of the board (4,4)."
+      puts 'Invalid position, placing knight at the middle of the board (4,4)."
     end
 
     @moves = find_moves

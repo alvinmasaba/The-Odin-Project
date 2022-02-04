@@ -12,6 +12,7 @@ class Board
 
   def initialize
     @board = create_board
+    @knight = nil
   end
 
   def create_board(board = [], position_board = [], row = 1)
@@ -21,48 +22,60 @@ class Board
       row += 1
     end
 
+    # Creates a BoardSquare object for each set of coordinates in each row
     board.each do |line|
-      # Create a BoardSquare object for each set of coordinates in the row
       line.each { |pos| position_board << BoardSquare.new(pos) }
     end
 
     position_board
   end
 
-  def create_knight(position)
-    # If the given position is valid, create a new knight with its current position
-    # set to the board square with matching coordinates.
-    return unless valid_pos?(position)
+  def knight_moves(src, dest, queue = [], visited = [])
+    return nil unless valid_pos?(src) && valid_pos?(dest)
 
-    square = place_knight(position)
-    square.contains_knight = true
-    @knight = Knight.new(square)
-    build_move_tree(knight.current_pos)
+    og_src = src
+
+    until src == dest
+      # Push src to visited
+      src = find_board_square(src)
+      visited << src.location
+
+      # Check if any of its children match dest
+      if check_for_match(src.children, dest)
+        src = dest
+      else
+        src.children.each { |child| queue << child }
+        src = queue.shift
+      end
+    end
+
+    path = find_path(og_src, dest, visited)
+    puts "You made it in #{path.size - 1} moves. Here's your path:
+
+    #{path.each { |location| p location }}"
   end
-
-  def knight_moves() end
 
   private
 
-  def place_knight(position)
-    @board.find { |sqr| sqr.coordinates == position }
-  end
+  def find_path(src, loc, visited, path = [])
+    until src == loc
+      # Prepend location to path
+      path.unshift loc
 
-  def find_adjacent_moves(pos, depth)
-    @board.each do |sqr|
-      # Check that root points to the square
-      next unless points_to?(pos.coordinates[0], pos.coordinates[1], sqr.coordinates[0], sqr.coordinates[1])
-
-      pos.outgoing << sqr
-      sqr.incoming << pos
-      sqr.dist_from_pos += depth
+      # Find its parent node
+      loc = visited.find do |sqr|
+        find_board_square(sqr).children.include?(loc)
+      end
     end
+
+    path.unshift loc
   end
 
-  def build_move_tree(square, depth = 1)
-    return if square == knight.current.pos && depth.positive?
+  def find_board_square(position)
+    @board.find { |sqr| sqr.location == position }
+  end
 
-    find_adjacent_moves(square, depth)
-    square.outgoing.each { |child| build_move_tree(child, depth + 1) }
+  def check_for_match(children, dest)
+    children.find { |child| child == dest }
   end
 end

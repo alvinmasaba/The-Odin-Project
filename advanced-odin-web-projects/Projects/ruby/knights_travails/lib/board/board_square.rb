@@ -2,20 +2,23 @@
 
 require_relative './knights_module'
 
-class Board
-  # Class representing a board position
-  class BoardSquare
-    # mixin
-    include Knights
+# Class representing a board position
+class BoardSquare
+  # mixin
+  include Knights
 
-    attr_accessor :coordinates, :contains_knight, :incoming, :outgoing, :dist_from_pos
+  attr_accessor :location, :children
 
-    def initialize(pos)
-      @coordinates = valid_pos?(pos)
-      @contains_knight = false
-      @incoming = []
-      @outgoing = []
-      @dist_from_pos = 0
-    end
+  TRANSFORMATIONS = [[1, 2], [-2, -1], [-1, 2], [2, -1],
+                     [1, -2], [-2, 1], [-1, -2], [2, 1]].freeze
+
+  def initialize(pos)
+    @location = pos
+    @children = find_children
+  end
+
+  def find_children
+    TRANSFORMATIONS.map { |t| [@location[0] + t[0], @location[1] + t[1]] }
+                   .select { |e| valid_pos?(e) }
   end
 end

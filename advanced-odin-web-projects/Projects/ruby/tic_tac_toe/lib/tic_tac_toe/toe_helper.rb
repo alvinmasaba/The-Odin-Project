@@ -43,7 +43,7 @@ module ToeHelper
     false
   end
 
-  def check_if_full(board)
+  def is_full?(board)
     # Return true only if the board has no more spaces ('#')
     !board.join.include?('#')
   end

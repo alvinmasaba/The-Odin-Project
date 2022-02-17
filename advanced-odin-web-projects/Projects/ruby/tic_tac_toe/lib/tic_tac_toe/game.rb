@@ -2,23 +2,18 @@
 
 require_relative 'toe_helper'
 
-# Class for playing a game of tic-tac-toe
+# class for playing a game of tic-tac-toe
 class Game
   include ToeHelper
 
-  attr_reader :finished
   attr_accessor :turn, :player1, :player2, :p1_sym, :p2_sym
 
   def initialize
-    intro
-    @finished = false
-    choose_names
-    set_symbols
-    @turn = @player1
+    # intro
     @board = Array.new(3) { |_n| ['#', '#', '#'] }
   end
 
-  def update_board
+  def place_symbol
     move = enter_position
     row = move[0]
     col = move[1]
@@ -27,7 +22,7 @@ class Game
       @board[row][col] = @turn == @player1 ? p1_sym : p2_sym
     else
       puts "\nPlease enter a valid row and column."
-      update_board
+      place_symbol
     end
   end
 
@@ -38,7 +33,6 @@ class Game
       @turn = "\nThe game is finished. #{@turn} won."
     elsif is_full?(@board)
       puts "\nIt's a tie!"
-      @finished = true
     else
       change_turn
     end
@@ -52,18 +46,58 @@ class Game
   end
 
   def play
+    choose_names
+    @turn = @player1
+    set_symbols
     show_board
-    until @finished
-      puts "\n#{@turn} it's your turn. Enter the row and column you wish to
+    play_turn until finished?
+  end
+
+  def play_turn
+    puts <<~HEREDOC
+
+      #{@turn} it's your turn. Enter the row and column you wish to
       place your mark separated by a comma:"
-      update_board
-      show_board
-      check_if_finished
-    end
+
+    HEREDOC
+
+    place_symbol
+    show_board
+    check_if_finished
   end
 
   def run
     play
+  end
+
+  def choose_symbol(player)
+    puts <<~HEREDOC
+
+      #{player}, choose a symbol. Your symbol can be any char
+      except a white-space or #.
+
+    HEREDOC
+
+    sym = gets.chomp until valid_symbol?(sym)
+    sym.to_sym
+  end
+
+  def enter_name(player)
+    puts "#{player} please enter your name (max: 10 chars):\n\n"
+    name = gets.chomp
+
+    if name.size <= 10
+      name
+    else
+      puts "Please enter a valid name\n\n"
+      name = enter_name(player)
+    end
+
+    name
+  end
+
+  def change_turn
+    @turn = @turn == @player1 ? @player2 : @player1
   end
 
   private
@@ -104,33 +138,24 @@ class Game
   end
 
   def choose_names
-    puts "Player 1 please enter your name:\n\n"
-    @player1 = gets.chomp
-    puts "\nPlayer 2 please enter your name:\n\n"
-    @player2 = gets.chomp
-  end
-
-  def choose_symbol(player)
-    puts <<~HEREDOC
-
-      #{player}, choose a symbol. Your symbol can be any char
-      except a white-space or #.
-
-    HEREDOC
-
-    sym = gets.chomp
-
-    # sym can be any non-whitespace character except #
-    if /\S/.match(sym) && sym != '#' && sym.size == 1
-      sym.to_sym
-    else
-      choose_symbol(player)
-    end
+    @player1 = enter_name('Player 1')
+    @player2 = enter_name('Player 2')
   end
 
   def set_symbols
     @p1_sym = choose_symbol(@player1)
+    change_turn
     @p2_sym = choose_symbol(@player2)
+    change_turn
+  end
+
+  def valid_symbol?(sym)
+    # sym can be any non-whitespace character except '#'
+    if /\S/.match(sym) && sym != '#' && sym.size == 1
+      true
+    else
+      false
+    end
   end
 
   def valid_move?(row, col)
@@ -155,16 +180,8 @@ class Game
     [row, col]
   end
 
-  def change_turn
-    @turn = @turn == @player1 ? @player2 : @player1
-  end
-
   def finished?
     # Returns true if a player has a full row, column, or diagonal
-    if check_rows(@board) || check_columns(@board) || check_diagonals(@board)
-      true
-    else
-      false
-    end
+    check_rows(@board) || check_columns(@board) || check_diagonals(@board)
   end
 end

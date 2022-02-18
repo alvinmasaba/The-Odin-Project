@@ -64,25 +64,18 @@ class Game
     end
   end
 
+  def finished?
+    # Returns true if a player has a full row, column, or diagonal
+    check_rows(self) || check_columns(self) || check_diagonals(self)
+  end
+
   def full?
     # Return true only if the board has no more spaces ('#')
     !@board.join.include?('#')
   end
 
-  def show_board
-    puts "\n"
-    @board.each do |row|
-      puts row.join
-    end
-  end
-
   def change_turn
     @turn = @turn == @player1 ? @player2 : @player1
-  end
-
-  def finished?
-    # Returns true if a player has a full row, column, or diagonal
-    check_rows(self) || check_columns(self) || check_diagonals(self)
   end
 
   private
@@ -117,5 +110,12 @@ class Game
 
     # Returns an array containing the entered row and column.
     [row, col]
+  end
+
+  def show_board
+    puts "\n"
+    @board.each do |row|
+      puts row.join
+    end
   end
 end

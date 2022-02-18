@@ -271,4 +271,41 @@ describe Player do
       end
     end
   end
+
+  describe '#valid_symbol?' do
+    it 'returns true when the symbol is valid' do
+      invalid_symbol = '@'
+      result = new_player.valid_symbol?(invalid_symbol)
+
+      expect(result).to eql(true)
+    end
+
+    it 'returns false when the symbol is an empty string' do
+      invalid_symbol = ''
+      result = new_player.valid_symbol?(invalid_symbol)
+
+      expect(result).to eql(false)
+    end
+
+    it 'returns false when the symbol is an empty space' do
+      invalid_symbol = ' '
+      result = new_player.valid_symbol?(invalid_symbol)
+
+      expect(result).to eql(false)
+    end
+
+    it 'returns false when the symbol is a #' do
+      invalid_symbol = '#'
+      result = new_player.valid_symbol?(invalid_symbol)
+
+      expect(result).to eql(false)
+    end
+
+    it 'returns false when the symbol length is > 1' do
+      invalid_symbol = '@@'
+      result = new_player.valid_symbol?(invalid_symbol)
+
+      expect(result).to eql(false)
+    end
+  end
 end

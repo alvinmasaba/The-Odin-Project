@@ -10,7 +10,7 @@ class Game
   attr_accessor :turn, :player1, :player2, :board
 
   def initialize(player1 = Player.new('Player 1'), player2 = Player.new('Player 2'))
-    # intro
+    intro
     @player1 = player1
     @player2 = player2
     @board = Array.new(3) { |_n| ['#', '#', '#'] }

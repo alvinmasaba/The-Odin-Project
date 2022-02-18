@@ -22,7 +22,7 @@ class Game
     col = move[1]
 
     if valid_move?(row, col)
-      @board[row][col] = @turn == @player1 ? p1_sym : p2_sym
+      @board[row][col] = @turn.symbol
     else
       puts "\nPlease enter a valid row and column."
       place_symbol

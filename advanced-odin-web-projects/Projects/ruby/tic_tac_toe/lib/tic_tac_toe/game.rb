@@ -9,10 +9,10 @@ class Game
 
   attr_accessor :turn, :player1, :player2, :board
 
-  def initialize
+  def initialize(player1 = Player.new('Player 1'), player2 = Player.new('Player 2'))
     # intro
-    @player1 = Player.new('Player 1')
-    @player2 = Player.new('Player 2')
+    @player1 = player1
+    @player2 = player2
     @board = Array.new(3) { |_n| ['#', '#', '#'] }
   end
 
@@ -66,7 +66,7 @@ class Game
 
   def finished?
     # Returns true if a player has a full row, column, or diagonal
-    check_rows(self) || check_columns(self) || check_diagonals(self)
+    check_rows || check_columns || check_diagonals
   end
 
   def full?

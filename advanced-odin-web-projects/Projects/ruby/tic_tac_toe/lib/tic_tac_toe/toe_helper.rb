@@ -1,20 +1,18 @@
 # frozen_string_literal: true
 
 module ToeHelper
-  def check_rows(game, result = false)
+  def check_rows(result = false)
     # Return true only if all values of a single row are 'X' or all 'O'
-    game.board.each do |row|
-      result = row.all? { |square| square == game.player1.symbol } ? true : result
-      result = row.all? { |square| square == game.player2.symbol } ? true : result
+    board.each do |row|
+      result = row.all? { |square| square == player1.symbol } ? true : result
+      result = row.all? { |square| square == player2.symbol } ? true : result
     end
 
     result
   end
 
-  def check_columns(game, result = false)
+  def check_columns(result = false)
     # Return true only if all values of a single column are the same symbol
-    board = game.board
-
     (0..2).each do |n|
       sym = board[0][n]
 
@@ -27,16 +25,15 @@ module ToeHelper
     result
   end
 
-  def check_diagonals(game)
+  def check_diagonals
     # Return true only if all values of a diagonal are 'X' or all 'O'
-    board = game.board
-    player = game.turn
     diagonals = [[board[0][0], board[1][1], board[2][2]],
                  [board[0][2], board[1][1], board[2][0]]]
 
-    full = Array.new(3) { player.symbol }
-
-    diagonals.any? { |diagonal| diagonal == full }
+    diagonals.any? do |diagonal|
+      result = diagonal.uniq
+      result.count == 1 unless result == ['#']
+    end
   end
 
   def intro

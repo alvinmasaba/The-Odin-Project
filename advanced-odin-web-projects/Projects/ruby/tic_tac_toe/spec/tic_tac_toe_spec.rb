@@ -131,82 +131,6 @@ describe Game do
     # No tests necessary as it only contains puts.
   end
 
-  describe '#finished?' do
-    subject(:finished_game) { described_class.new }
-
-    context 'when there is a full row of like symbols' do
-      it 'returns true' do
-        finished_game.turn = finished_game.player1
-        x = finished_game.player1.symbol
-        finished_game.board[0] = [x, x, x]
-
-        expect(finished_game).to be_finished
-      end
-    end
-
-    context 'when there is a partially filled row of like symbols' do
-      it 'returns false' do
-        finished_game.turn = finished_game.player1
-        x = finished_game.player1.symbol
-        finished_game.board[0] = [x, x, '#']
-
-        expect(finished_game).to_not be_finished
-      end
-    end
-
-    context 'when there is a full column of like symbols' do
-      it 'returns true' do
-        finished_game.turn = finished_game.player1
-        x = finished_game.player1.symbol
-
-        finished_game.board[0][1] = x
-        finished_game.board[1][1] = x
-        finished_game.board[2][1] = x
-
-        expect(finished_game).to be_finished
-      end
-    end
-
-    context 'when there is a partially filled column' do
-      it 'returns false' do
-        finished_game.turn = finished_game.player1
-        x = finished_game.player1.symbol
-
-        finished_game.board[0][1] = x
-        finished_game.board[1][1] = '#'
-        finished_game.board[2][1] = x
-
-        expect(finished_game).to_not be_finished
-      end
-    end
-
-    context 'when there is a full diagonal of like symbols' do
-      it 'returns true' do
-        finished_game.turn = finished_game.player1
-        x = finished_game.player1.symbol
-
-        finished_game.board[0][0] = x
-        finished_game.board[1][1] = x
-        finished_game.board[2][2] = x
-
-        expect(finished_game).to be_finished
-      end
-    end
-
-    context 'when there is a partially filled diagonal' do
-      it 'returns false' do
-        finished_game.turn = finished_game.player1
-        x = finished_game.player1.symbol
-
-        finished_game.board[0][0] = :O
-        finished_game.board[1][1] = '#'
-        finished_game.board[2][2] = x
-
-        expect(finished_game).to_not be_finished
-      end
-    end
-  end
-
   describe '#full?' do
     context 'when board is full' do
       subject(:full_board) { described_class.new }
@@ -233,6 +157,88 @@ describe Game do
   describe '#check_if_finished' do
     # No testing necessary it only contains puts and calls for
     # previously tested methods.
+  end
+
+  # ToeHelper module tests
+  describe '#check_rows' do
+    let(:random_player) { instance_double(Player, symbol: :X) }
+    subject(:game_rows) { described_class.new(random_player) }
+
+    context 'when there is a full row of like symbols' do
+      it 'returns true' do
+        x = game_rows.player1.symbol
+        game_rows.board[0] = [x, x, x]
+
+        expect(game_rows.check_rows).to be(true)
+      end
+    end
+
+    context 'when there is a partially filled row of like symbols' do
+      it 'returns false' do
+        x = game_rows.player1.symbol
+        game_rows.board[0] = [x, x, '#']
+
+        expect(game_rows.check_rows).to_not be(true)
+      end
+    end
+  end
+
+  describe '#check_columns' do
+    let(:random_player) { instance_double(Player, symbol: :X) }
+    subject(:game_columns) { described_class.new(random_player) }
+
+    context 'when there is a full column of like symbols' do
+      it 'returns true' do
+        x = game_columns.player1.symbol
+
+        game_columns.board[0][1] = x
+        game_columns.board[1][1] = x
+        game_columns.board[2][1] = x
+
+        expect(game_columns.check_columns).to be(true)
+      end
+    end
+
+    context 'when there is a partially filled column' do
+      it 'returns false' do
+        x = game_columns.player1.symbol
+
+        game_columns.board[0][1] = x
+        game_columns.board[1][1] = '#'
+        game_columns.board[2][1] = x
+
+        expect(game_columns.check_columns).to_not be(true)
+      end
+    end
+  end
+
+  describe '#check_diagonals' do
+    let(:random_player) { instance_double(Player, symbol: :X) }
+    subject(:game_diagonals) { described_class.new(random_player) }
+
+    context 'when there is a full diagonal of like symbols' do
+      it 'returns true' do
+        x = game_diagonals.player1.symbol
+
+        game_diagonals.board[0][0] = x
+        game_diagonals.board[1][1] = x
+        game_diagonals.board[2][2] = x
+
+        expect(game_diagonals.check_diagonals).to be(true)
+      end
+    end
+
+    context 'when there is a partially filled diagonal' do
+      it 'returns false' do
+        x = game_diagonals.player1.symbol
+
+        game_diagonals.board[0][0] = :O
+        game_diagonals.board[1][1] = '#'
+        game_diagonals.board[2][2] = x
+
+        expect(game_diagonals.check_diagonals).to_not be(true)
+      end
+    end
   end
 end
 

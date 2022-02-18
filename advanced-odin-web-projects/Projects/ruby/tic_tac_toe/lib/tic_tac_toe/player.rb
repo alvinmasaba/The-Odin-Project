@@ -11,10 +11,10 @@ class Player
 
   def enter_name
     puts "#{@name}, please enter a name. Your name may be up to 10 chars max:\n\n"
-    
+
     new_name = gets.chomp
     new_name = gets.chomp until new_name.size <= 10 && !new_name.nil?
-    
+
     @name = new_name
   end
 

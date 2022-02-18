@@ -47,4 +47,39 @@ module ToeHelper
     # Return true only if the board has no more spaces ('#')
     !board.join.include?('#')
   end
+
+  def intro
+    puts <<~HEREDOC
+
+      Welcome to TIC-TAC-TOE: command line version
+
+      The rules are simple. There are two players.
+      Each player will choose their symbol and take
+      turns placing that symbol on the game board.
+
+      A player can only place a symbol on an empty
+      space, which looks like this: #.
+
+      A symbol is placed by entering the row and
+      column you would like to position it. The
+      board positions are numbered like this:
+
+                      0 1 2
+                    0 # # #
+                    1 # # #
+                    2 # # #
+
+      So, for example, in order to place your symbol
+      in the middle space, you would enter 1,1. To
+      place it on the top left square, you would enter
+      0,0 etc...
+
+      The first player to place three of their own
+      symbol in a row, column, or diagonal wins the
+      game.
+
+      Have fun!
+
+    HEREDOC
+  end
 end

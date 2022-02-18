@@ -1,15 +1,18 @@
 # frozen_string_literal: true
 
 require_relative 'toe_helper'
+require_relative 'player'
 
 # class for playing a game of tic-tac-toe
 class Game
   include ToeHelper
 
-  attr_accessor :turn, :player1, :player2, :p1_sym, :p2_sym
+  attr_accessor :turn, :player1, :player2, :board
 
   def initialize
     # intro
+    @player1 = Player.new('Player 1')
+    @player2 = Player.new('Player 2')
     @board = Array.new(3) { |_n| ['#', '#', '#'] }
   end
 
@@ -70,93 +73,31 @@ class Game
     play
   end
 
-  def choose_symbol(player)
-    puts <<~HEREDOC
-
-      #{player}, choose a symbol. Your symbol can be any char
-      except a white-space or #.
-
-    HEREDOC
-
-    sym = gets.chomp until valid_symbol?(sym)
-    sym.to_sym
-  end
-
-  def enter_name(player)
-    puts "#{player} please enter your name (max: 10 chars):\n\n"
-    name = gets.chomp
-
-    if name.size <= 10
-      name
-    else
-      puts "Please enter a valid name\n\n"
-      name = enter_name(player)
-    end
-
-    name
-  end
-
   def change_turn
     @turn = @turn == @player1 ? @player2 : @player1
   end
 
-  private
-
-  def intro
-    puts <<~HEREDOC
-
-      Welcome to TIC-TAC-TOE: command line version
-
-      The rules are simple. There are two players.
-      Each player will choose their symbol and take
-      turns placing that symbol on the game board.
-
-      A player can only place a symbol on an empty
-      space, which looks like this: #.
-
-      A symbol is placed by entering the row and
-      column you would like to position it. The
-      board positions are numbered like this:
-
-                      0 1 2
-                    0 # # #
-                    1 # # #
-                    2 # # #
-
-      So, for example, in order to place your symbol
-      in the middle space, you would enter 1,1. To
-      place it on the top left square, you would enter
-      0,0 etc...
-
-      The first player to place three of their own
-      symbol in a row, column, or diagonal wins the
-      game.
-
-      Have fun!
-
-    HEREDOC
-  end
-
-  def choose_names
-    @player1 = enter_name('Player 1')
-    @player2 = enter_name('Player 2')
-  end
-
-  def set_symbols
-    @p1_sym = choose_symbol(@player1)
-    change_turn
-    @p2_sym = choose_symbol(@player2)
-    change_turn
-  end
-
-  def valid_symbol?(sym)
-    # sym can be any non-whitespace character except '#'
-    if /\S/.match(sym) && sym != '#' && sym.size == 1
+  def finished?
+    # Returns true if a player has a full row, column, or diagonal
+    if check_rows(@board) || check_columns(@board) || check_diagonals(@board)
       true
     else
       false
     end
   end
+
+  private
+
+  def create_players
+    choose_name_symbol(@player1)
+    choose_name_symbol(@player2)
+  end
+
+  def choose_name_symbol(player)
+    player.enter_name
+    player.choose_symbol
+  end
+
 
   def valid_move?(row, col)
     # As both conditions must be true to return true, return false if the first
@@ -178,10 +119,5 @@ class Game
 
     # Returns an array containing the entered row and column.
     [row, col]
-  end
-
-  def finished?
-    # Returns true if a player has a full row, column, or diagonal
-    check_rows(@board) || check_columns(@board) || check_diagonals(@board)
   end
 end

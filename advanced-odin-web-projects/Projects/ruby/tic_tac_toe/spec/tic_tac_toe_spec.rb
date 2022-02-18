@@ -79,11 +79,12 @@ describe Game do
   end
 
   describe '#choose_names' do
-    # No test necessary as it only calls enter_name which has been tested
+    # No test necessary as it only calls enter_name which has been tested.
   end
 
   describe '#set_symbols' do
-    # No test necessary as it only calls choose_symbols which has been tested and change_turn
+    # No test necessary as it only calls choose_symbols and change_turn which
+    # have been tested.
   end
 
   describe '#change_turn' do
@@ -102,6 +103,67 @@ describe Game do
         game_board.player2 = 'Player 2'
         game_board.turn = game_board.player2
         expect { game_board.change_turn }.to change { game_board.turn }.to(game_board.player1)
+      end
+    end
+  end
+
+  describe '#show_board' do
+    # No tests necessary as it only contains puts.
+  end
+
+  describe '#place_symbol' do
+    symbol = 'X'
+    subject(:game_symbol) { described_class.new }
+
+    context 'when player1 inputs a valid move' do
+      move = [0, 0]
+
+      before do
+        allow(game_symbol).to receive(:enter_position).and_return(move)
+        allow(game_symbol).to receive(:valid_move?).and_return(true)
+        allow(game_symbol).to receive(:<=>).and_return(true)
+      end
+
+      it "it changes the value of board at the position to the player's symbol" do
+        game_symbol.p1_sym = symbol
+        game_symbol.place_symbol
+        result = game_symbol.board[move[0]][move[1]]
+        expect(result).to eql(symbol)
+      end
+    end
+
+    context 'when player1 inputs an invalid move twice' do
+      move1 = [9, 8]
+      move2 = [7, 88]
+      move3 = [1, 1]
+
+      before do
+        allow(game_symbol).to receive(:enter_position).and_return(move1, move2, move3)
+        allow(game_symbol).to receive(:valid_move?).and_return(false, false, true)
+        allow(game_symbol).to receive(:<=>).and_return(true)
+      end
+
+      it 'prompts to enter a valid move twice' do
+        expect(game_symbol).to receive(:puts).with("\nPlease enter a valid row and column.").twice
+        game_symbol.place_symbol
+      end
+
+      it "it changes the value of board at the position to the player's symbol" do
+        game_symbol.p1_sym = symbol
+        game_symbol.place_symbol
+        result = game_symbol.board[move3[0]][move3[1]]
+        expect(result).to eql(symbol)
+      end
+    end
+  end
+
+  describe '#finished?' do
+    subject(:finished_game) {described_class.new }
+
+    context 'when there is a full row of like symbols' do
+      it 'returns true' do
+        finished_game.board[0] = %i[x x x]
+        expect(finished_game).to be_finished
       end
     end
   end

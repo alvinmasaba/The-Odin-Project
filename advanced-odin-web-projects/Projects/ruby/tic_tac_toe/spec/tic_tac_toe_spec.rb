@@ -8,33 +8,62 @@ describe Game do
 
   describe '#initialize' do
     # Initialize -> No test necessary as its only creating
-    # instance variables and calling methods.
+    # instance variables.
   end
 
-  describe '#change_turn' do
-    subject(:game_turn) { described_class.new }
+  describe '#run' do
+    # No testing necessary as it only calls a single method
+  end
 
-    context 'when @turn == @player1' do
-      it 'changes @turn to @player2' do
-        game_turn.turn = game_turn.player1
-        player2 = game_turn.player2
-        expect { game_turn.change_turn }.to change { game_turn.turn }.to(player2)
+  describe '#play' do
+    subject(:finished_game) { described_class.new }
+
+    context 'when finished? returns true' do
+      before do
+        allow(finished_game).to receive(:create_players)
+        allow(finished_game).to receive(:turn)
+        allow(finished_game).to receive(:show_board)
+        allow(finished_game).to receive(:finished?).and_return(true)
+      end
+
+      it 'does not call play_turn' do
+        expect(finished_game).to_not receive(:play_turn)
       end
     end
 
-    context 'when @turn == @player2' do
-      it 'changes @turn to @player1' do
-        game_turn.turn = game_turn.player2
-        player1 = game_turn.player1
-        expect { game_turn.change_turn }.to change { game_turn.turn }.to(player1)
+    context 'when finished? returns false once' do
+      before do
+        allow(finished_game).to receive(:create_players)
+        allow(finished_game).to receive(:turn)
+        allow(finished_game).to receive(:show_board)
+        allow(finished_game).to receive(:finished?).and_return(false, true)
+      end
+
+      it 'does calls play_turn once' do
+        expect(finished_game).to receive(:play_turn).once
+        finished_game.play
+      end
+    end
+
+    context 'when finished? returns false twice' do
+      before do
+        allow(finished_game).to receive(:create_players)
+        allow(finished_game).to receive(:turn)
+        allow(finished_game).to receive(:show_board)
+        allow(finished_game).to receive(:finished?).and_return(false, false, true)
+      end
+
+      it 'does calls play_turn twice' do
+        expect(finished_game).to receive(:play_turn).twice
+        finished_game.play
       end
     end
   end
 
-  describe '#show_board' do
-    # No tests necessary as it only contains puts.
+  describe '#play_turn' do
+    # No testing necessary as it only contains puts
+    # and previously tested method calls.
   end
-
   describe '#place_symbol' do
     subject(:game_symbol) { described_class.new }
     let(:random_player) { instance_double(Player, name: 'Alvin', symbol: :X) }
@@ -76,6 +105,30 @@ describe Game do
         expect(result).to eql(random_player.symbol)
       end
     end
+  end
+
+  describe '#change_turn' do
+    subject(:game_turn) { described_class.new }
+
+    context 'when @turn == @player1' do
+      it 'changes @turn to @player2' do
+        game_turn.turn = game_turn.player1
+        player2 = game_turn.player2
+        expect { game_turn.change_turn }.to change { game_turn.turn }.to(player2)
+      end
+    end
+
+    context 'when @turn == @player2' do
+      it 'changes @turn to @player1' do
+        game_turn.turn = game_turn.player2
+        player1 = game_turn.player1
+        expect { game_turn.change_turn }.to change { game_turn.turn }.to(player1)
+      end
+    end
+  end
+
+  describe '#show_board' do
+    # No tests necessary as it only contains puts.
   end
 
   describe '#finished?' do
@@ -152,6 +205,34 @@ describe Game do
         expect(finished_game).to_not be_finished
       end
     end
+  end
+
+  describe '#full?' do
+    context 'when board is full' do
+      subject(:full_board) { described_class.new }
+
+      it 'returns true' do
+        full_board.board = Array.new(3) { %w[x x x] }
+        expect(full_board).to be_full
+      end
+    end
+
+    context 'when board is not full' do
+      subject(:full_board) { described_class.new }
+
+      it 'returns false' do
+        full_board.board = Array.new(2) { %w[x x x] }
+        # Adds a single empty space to the last row
+        full_board.board << %w[x # x]
+
+        expect(full_board).to_not be_full
+      end
+    end
+  end
+
+  describe '#check_if_finished' do
+    # No testing necessary it only contains puts and calls for
+    # previously tested methods.
   end
 end
 

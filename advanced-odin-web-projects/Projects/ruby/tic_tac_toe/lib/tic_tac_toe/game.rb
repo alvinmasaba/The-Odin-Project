@@ -16,42 +16,13 @@ class Game
     @board = Array.new(3) { |_n| ['#', '#', '#'] }
   end
 
-  def place_symbol
-    move = enter_position
-    row = move[0]
-    col = move[1]
-
-    if valid_move?(row, col)
-      @board[row][col] = @turn.symbol
-    else
-      puts "\nPlease enter a valid row and column."
-      place_symbol
-    end
-  end
-
-  def check_if_finished
-    # If the game is finished, print the winner, else change the turn
-    if finished?
-      puts "#{@turn} wins!"
-      @turn = "\nThe game is finished. #{@turn} won."
-    elsif full?(@board)
-      puts "\nIt's a tie!"
-    else
-      change_turn
-    end
-  end
-
-  def show_board
-    puts "\n"
-    @board.each do |row|
-      puts row.join
-    end
+  def run
+    play
   end
 
   def play
-    choose_names
+    create_players
     @turn = @player1
-    set_symbols
     show_board
     play_turn until finished?
   end
@@ -69,8 +40,40 @@ class Game
     check_if_finished
   end
 
-  def run
-    play
+  def place_symbol
+    move = enter_position
+    row = move[0]
+    col = move[1]
+
+    if valid_move?(row, col)
+      @board[row][col] = @turn.symbol
+    else
+      puts "\nPlease enter a valid row and column."
+      place_symbol
+    end
+  end
+
+  def check_if_finished
+    # If the game is finished, print the winner, else change the turn
+    if finished?
+      puts "#{@turn} wins!"
+    elsif full?
+      puts "\nIt's a tie!"
+    else
+      change_turn
+    end
+  end
+
+  def full?
+    # Return true only if the board has no more spaces ('#')
+    !@board.join.include?('#')
+  end
+
+  def show_board
+    puts "\n"
+    @board.each do |row|
+      puts row.join
+    end
   end
 
   def change_turn
@@ -93,7 +96,6 @@ class Game
     player.enter_name
     player.choose_symbol
   end
-
 
   def valid_move?(row, col)
     # As both conditions must be true to return true, return false if the first

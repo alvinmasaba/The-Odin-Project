@@ -39,11 +39,6 @@ module ToeHelper
     diagonals.any? { |diagonal| diagonal == full }
   end
 
-  def full?(board)
-    # Return true only if the board has no more spaces ('#')
-    !board.join.include?('#')
-  end
-
   def intro
     puts <<~HEREDOC
 

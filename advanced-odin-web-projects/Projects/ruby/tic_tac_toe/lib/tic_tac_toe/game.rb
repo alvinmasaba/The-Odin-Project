@@ -30,7 +30,7 @@ class Game
   def play_turn
     puts <<~HEREDOC
 
-      #{@turn} it's your turn. Enter the row and column you wish to
+      #{@turn.name} it's your turn. Enter the row and column you wish to
       place your mark separated by a comma:"
 
     HEREDOC

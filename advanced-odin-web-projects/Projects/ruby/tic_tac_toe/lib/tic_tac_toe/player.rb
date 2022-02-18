@@ -10,10 +10,15 @@ class Player
   end
 
   def enter_name
-    puts "#{@name}, please enter a name. Your name may be up to 10 chars max:\n\n"
+    puts "\n#{@name}, please enter a name. Your name may be up to 10 chars max:\n\n"
 
     new_name = gets.chomp
-    new_name = gets.chomp until new_name.size <= 10 && !new_name.nil?
+
+    if valid_name?(new_name)
+      new_name
+    else
+      new_name = enter_name
+    end
 
     @name = new_name
   end
@@ -21,13 +26,17 @@ class Player
   def choose_symbol
     puts <<~HEREDOC
 
-      #{@name}, choose a symbol. Your symbol can be any char
-      except a white-space or #.
+      #{@name}, choose a symbol. Your symbol can be any char except a white-space or #.
 
     HEREDOC
 
     sym = gets.chomp
-    sym = gets.chomp until valid_symbol?(sym)
+
+    if valid_symbol?(sym)
+      sym
+    else
+      sym = choose_symbol
+    end
 
     @symbol = sym.to_sym
   end
@@ -35,6 +44,14 @@ class Player
   def valid_symbol?(sym)
     # sym can be any non-whitespace character except '#'
     if /\S/.match(sym) && sym != '#' && sym.size == 1
+      true
+    else
+      false
+    end
+  end
+
+  def valid_name?(name_string)
+    if /\S/.match(name_string) && name_string.size.between?(1, 10)
       true
     else
       false

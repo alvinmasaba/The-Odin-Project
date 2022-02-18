@@ -245,6 +245,42 @@ end
 describe Player do
   subject(:new_player) { described_class.new }
 
+  describe '#initialize' do
+    # No testing necessary
+  end
+
+  describe '#enter_name' do
+    subject(:player_name) { described_class.new }
+    valid_name = 'first name'
+    invalid_name = '1234567891011'
+
+    context 'when a valid name is input' do
+      before do
+        allow(player_name).to receive(:puts)
+        allow(player_name).to receive(:gets).and_return(valid_name)
+      end
+
+      it 'sets name to the input' do
+        player_name.enter_name
+        result = player_name.name
+        expect(result).to eql(valid_name)
+      end
+    end
+
+    context 'when an invalid name is input twice' do
+      before do
+        allow(player_name).to receive(:puts)
+        allow(player_name).to receive(:gets).and_return(invalid_name, invalid_name, valid_name)
+      end
+
+      it 'sets name to the valid input' do
+        player_name.enter_name
+        result = player_name.name
+        expect(result).to eql(valid_name)
+      end
+    end
+  end
+
   describe '#choose_symbol' do
     context 'when a valid string is input' do
       # Symbol required in both before and it blocks

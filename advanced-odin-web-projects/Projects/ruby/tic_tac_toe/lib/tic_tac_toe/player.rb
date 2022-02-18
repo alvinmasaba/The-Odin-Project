@@ -34,10 +34,6 @@ class Player
 
   def valid_symbol?(sym)
     # sym can be any non-whitespace character except '#'
-    if /\S/.match(sym) && sym != '#' && sym.size == 1
-      true
-    else
-      false
-    end
+    /\S/.match(sym) && sym != '#' && sym.size == 1 
   end
 end

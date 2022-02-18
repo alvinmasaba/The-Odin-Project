@@ -34,7 +34,7 @@ class Game
     if finished?
       puts "#{@turn} wins!"
       @turn = "\nThe game is finished. #{@turn} won."
-    elsif is_full?(@board)
+    elsif full?(@board)
       puts "\nIt's a tie!"
     else
       change_turn
@@ -79,11 +79,7 @@ class Game
 
   def finished?
     # Returns true if a player has a full row, column, or diagonal
-    if check_rows(@board) || check_columns(@board) || check_diagonals(@board)
-      true
-    else
-      false
-    end
+    check_rows(self) || check_columns(self) || check_diagonals(self)
   end
 
   private

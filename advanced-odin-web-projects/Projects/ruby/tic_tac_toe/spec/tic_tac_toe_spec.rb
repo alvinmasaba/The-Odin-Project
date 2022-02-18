@@ -83,8 +83,73 @@ describe Game do
 
     context 'when there is a full row of like symbols' do
       it 'returns true' do
-        finished_game.board[0] = %i[x x x]
+        finished_game.turn = finished_game.player1
+        x = finished_game.player1.symbol
+        finished_game.board[0] = [x, x, x]
+
         expect(finished_game).to be_finished
+      end
+    end
+
+    context 'when there is a partially filled row of like symbols' do
+      it 'returns false' do
+        finished_game.turn = finished_game.player1
+        x = finished_game.player1.symbol
+        finished_game.board[0] = [x, x, '#']
+
+        expect(finished_game).to_not be_finished
+      end
+    end
+
+    context 'when there is a full column of like symbols' do
+      it 'returns true' do
+        finished_game.turn = finished_game.player1
+        x = finished_game.player1.symbol
+
+        finished_game.board[0][1] = x
+        finished_game.board[1][1] = x
+        finished_game.board[2][1] = x
+
+        expect(finished_game).to be_finished
+      end
+    end
+
+    context 'when there is a partially filled column' do
+      it 'returns false' do
+        finished_game.turn = finished_game.player1
+        x = finished_game.player1.symbol
+
+        finished_game.board[0][1] = x
+        finished_game.board[1][1] = '#'
+        finished_game.board[2][1] = x
+
+        expect(finished_game).to_not be_finished
+      end
+    end
+
+    context 'when there is a full diagonal of like symbols' do
+      it 'returns true' do
+        finished_game.turn = finished_game.player1
+        x = finished_game.player1.symbol
+
+        finished_game.board[0][0] = x
+        finished_game.board[1][1] = x
+        finished_game.board[2][2] = x
+
+        expect(finished_game).to be_finished
+      end
+    end
+
+    context 'when there is a partially filled diagonal' do
+      it 'returns false' do
+        finished_game.turn = finished_game.player1
+        x = finished_game.player1.symbol
+
+        finished_game.board[0][0] = :O
+        finished_game.board[1][1] = '#'
+        finished_game.board[2][2] = x
+
+        expect(finished_game).to_not be_finished
       end
     end
   end
@@ -99,8 +164,8 @@ describe Player do
       valid_sym = '@'
 
       before do
-        allow(:new_player).to receive(:puts)
-        allow(:new_player).to receive(:gets).and_return(valid_sym)
+        allow(new_player).to receive(:puts)
+        allow(new_player).to receive(:gets).and_return(valid_sym)
       end
 
       it 'returns the string as a symbol' do
@@ -114,8 +179,8 @@ describe Player do
       valid_sym = '$'
 
       before do
-        allow(:new_player).to receive(:puts)
-        allow(:new_player).to receive(:gets).and_return('#', valid_sym)
+        allow(new_player).to receive(:puts)
+        allow(new_player).to receive(:gets).and_return('#', valid_sym)
       end
 
       it 'returns only the valid input' do

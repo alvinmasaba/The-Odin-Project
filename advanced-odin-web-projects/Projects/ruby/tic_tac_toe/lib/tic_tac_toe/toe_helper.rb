@@ -1,18 +1,19 @@
 # frozen_string_literal: true
 
 module ToeHelper
-  def check_rows(board, result = false)
+  def check_rows(game, result = false)
     # Return true only if all values of a single row are 'X' or all 'O'
-    board.each do |row|
-      result = row.all? { |square| square == 'X' } ? true : result
-      result = row.all? { |square| square == 'O' } ? true : result
+    game.board.each do |row|
+      result = row.all? { |square| square == game.player1.symbol } ? true : result
+      result = row.all? { |square| square == game.player2.symbol } ? true : result
     end
 
     result
   end
 
-  def check_columns(board, result = false)
-    # Return true only if all values of a single column are 'X' or all 'O'.
+  def check_columns(game, result = false)
+    # Return true only if all values of a single column are the same symbol
+    board = game.board
 
     (0..2).each do |n|
       sym = board[0][n]
@@ -26,24 +27,19 @@ module ToeHelper
     result
   end
 
-  def check_diagonals(board)
+  def check_diagonals(game)
     # Return true only if all values of a diagonal are 'X' or all 'O'
-    
-    sym_1 = board[0][0]
-    sym_2 = board[0][2]
+    board = game.board
+    player = game.turn
+    diagonals = [[board[0][0], board[1][1], board[2][2]],
+                 [board[0][2], board[1][1], board[2][0]]]
 
-    unless sym_1 == '#'
-      return true if sym_1 == board[1][1] && sym_1 == board[2][2]
-    end
+    full = Array.new(3) { player.symbol }
 
-    unless sym_2 == '#'
-      return true if sym_2 == board[1][1] && sym_2 == board[2][0]
-    end
-
-    false
+    diagonals.any? { |diagonal| diagonal == full }
   end
 
-  def is_full?(board)
+  def full?(board)
     # Return true only if the board has no more spaces ('#')
     !board.join.include?('#')
   end

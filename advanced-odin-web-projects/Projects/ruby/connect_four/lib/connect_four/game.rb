@@ -6,7 +6,7 @@ require_relative 'player'
 class Game
   attr_accessor :player1, :player2, :board
 
-  def initialize(player1 = Player.new('Player 1'), player2 = Player.new('Player 2'))
+  def initialize(player1 = Player.new('Player 1'), player2 = Player.new('Player 2'), board = nil)
     @player1 = player1
     @player2 = player2
     @board = board

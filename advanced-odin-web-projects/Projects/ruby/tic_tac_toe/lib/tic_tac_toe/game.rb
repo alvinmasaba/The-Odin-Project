@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require_relative 'toe_helper'
+require_relative 'helpers'
 require_relative 'player'
 
 # class for playing a game of tic-tac-toe
 class Game
-  include ToeHelper
+  include Helpers
 
   attr_accessor :turn, :player1, :player2, :board
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require './lib/tic_tac_toe/game'
-require './lib/tic_tac_toe/toe_helper'
+require './lib/tic_tac_toe/helpers'
 
 describe Game do
   subject(:game_board) { described_class.new }
@@ -159,7 +159,8 @@ describe Game do
     # previously tested methods.
   end
 
-  # ToeHelper module tests
+  # Helpers module tests
+  
   describe '#check_rows' do
     let(:random_player) { instance_double(Player, symbol: :X) }
     subject(:game_rows) { described_class.new(random_player) }

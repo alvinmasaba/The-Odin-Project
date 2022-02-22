@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-module ToeHelper
+# helper functions for tic-tac-toe Game class
+module Helpers
   def check_rows(result = false)
     # Return true only if all values of a single row are 'X' or all 'O'
     board.each do |row|

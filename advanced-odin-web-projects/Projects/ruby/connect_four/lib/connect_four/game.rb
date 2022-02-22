@@ -4,22 +4,39 @@ require_relative 'player'
 
 # class for playing a game of connect four
 class Game
-  attr_accessor :player1, :player2, :board
+  attr_accessor :player1, :player2, :board, :turn
 
   def initialize(rows = 6, cols = 7)
     @player1 = Player.new('Player 1')
     @player2 = Player.new('Player 2')
     @board = Array.new(rows) { Array.new(cols) { |_n| '#' } }
+    @turn = player1
   end
 
   def drop_marker(marker, column)
     # Starting in reverse order, change the first empty space ('#')
     # to the marker, then break.
-    board.reverse_each do |row|
-      next unless row[column] == '#'
-      
-      row[column] = marker
-      break
+
+    if is_full?(marker, column)
+      puts 'This column is full. Please choose another column.'
+      drop_marker(marker, column)
+    else
+      board.reverse_each do |row|
+        next unless row[column] == '#'
+        
+        row[column] = marker
+        break
+      end
     end
   end
+
+  def is_full?(marker, column)
+    board.all? { |row| row[column] == marker }
+  end
+
+  def change_turn
+    @turn = @turn == player1 ? player2 : player1
+  end
+
+
 end

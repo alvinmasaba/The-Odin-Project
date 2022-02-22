@@ -21,7 +21,7 @@ describe Game do
 
   describe '#drop_marker' do
     # When drop_marker is called, a player picks a column to place
-    # their symbol.
+    # their marker.
     marker = "\u2600".encode('utf-8')
 
     context 'when the column is empty' do
@@ -49,20 +49,88 @@ describe Game do
       end
     end
 
-    context 'when column is full' do
+    context 'when a filled column is chosen twice, then an unfilled one' do
       subject(:full_col) {described_class.new(6, 7) }
       other_marker = 'O'
 
-      it 'does not place the marker in the column' do
+      before do
+        allow(full_col).to receive(:is_full?).and_return(true, true, false)
+      end
+
+      it 'prompts to enter a different column twice' do
         column = 3
         full_col.board.each { |row| row[column] = other_marker }
+        expect(full_col).to receive(:puts).with('This column is full. Please choose another column.').twice
         full_col.drop_marker(marker, column)
-
-        result = full_col.board.any? { |row| row[column] == marker }
-        expect(result).to be(false) and expect(full_col.board[0][column]).to eql(other_marker)
       end
     end
   end
+
+  # Check if column is full
+  describe '#is_full?' do
+    marker = "\u2600".encode('utf-8')
+
+    context 'when column is full' do
+      subject(:full_column) { described_class.new(6,7) }
+
+      it 'returns true' do
+        column = 5
+        full_column.board.each { |row| row[column] = marker }
+        result = full_column.is_full?(marker, column)
+        expect(result).to be(true)
+      end
+    end
+
+    context 'when column is partially filled' do
+      subject(:partial_column) { described_class.new(10, 7) }
+
+      it 'returns false' do
+        column = 4
+        partial_column.board[-1][column] = marker
+        partial_column.board[-2][column] = marker
+        partial_column.board[-3][column] = marker
+        partial_column.board[-4][column] = marker
+
+        result = partial_column.is_full?(marker, column)
+        expect(result).to be(false)
+      end
+    end
+
+    context 'when column is empty' do
+      subject(:empty_column) { described_class.new(6,7) }
+
+      it 'returns false' do
+        column = 2
+        result = empty_column.is_full?(marker, column)
+        expect(result).to be(false)
+      end
+    end
+  end 
+
+  describe '#change_turn' do
+    context 'when it is Player 1\'s turn' do
+      subject(:player1_turn) { described_class.new }
+
+      it 'changes turn to Player 2' do
+        player1_turn.change_turn
+        turn = player1_turn.turn
+        expect(turn).to eql(player1_turn.player2)
+      end
+    end
+
+    context 'when it is Player 2\'s turn' do
+      subject(:player2_turn) { described_class.new }
+
+      it 'changes turn to Player 1' do
+        player2_turn.turn = player2_turn.player2
+        player2_turn.change_turn
+        turn = player2_turn.turn
+        expect(turn).to eql(player2_turn.player1)
+      end
+    end
+  end
+
+  # 
 end
 
 describe Player do

@@ -14,17 +14,23 @@ class Player
     @marker = marker
   end
 
-  def choose_marker(index = nil)
+  def choose_marker(markers = [], index = SPECIAL_MARKERS.size)
     SPECIAL_MARKERS.each_with_index do |e, i|
-      p "Index #{i}: #{e}"
+      markers << "Index #{i}: #{e}"
     end
 
-    until index.between?(0, 18)
-      puts "\n#{name}, please enter the index of the marker you would like to use (0-18)."
+    puts <<~HEREDOC
+      AVAILABLE MARKERS:
+
+      #{markers}
+    HEREDOC
+
+    unless index.between?(0, SPECIAL_MARKERS.size - 1)
+      puts "\n#{name}, please enter the index of the marker you would like to use (0-18).\n"
       index = gets.chomp.to_i
     end
-    
-    @marker = SPECIAL_MARKERS[index]
+
+    @marker = SPECIAL_MARKERS[index].rstrip
+    SPECIAL_MARKERS.delete_at(index)
   end
 end
-  

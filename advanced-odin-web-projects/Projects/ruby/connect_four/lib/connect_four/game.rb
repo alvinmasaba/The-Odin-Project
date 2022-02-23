@@ -14,16 +14,18 @@ class Game
     @player2 = Player.new('Player 2')
     @board = Array.new(rows) { Array.new(cols) { |_n| '#' } }
     @turn = player1
+    @num_cols = cols
+    intro
   end
 
   def drop_marker
     # Starting in reverse order, change the first empty space ('#')
     # to the marker, then break.
-    puts 'Enter a valid column to drop your marker in: '
+    puts "\nEnter a valid column to drop your marker in:"
     col = gets.chomp.to_i
 
     if full_column?(col)
-      puts 'This column is full. Please choose another column.'
+      puts "\nThis column is full. Please choose another column."
       drop_marker
     else
       valid_column?(col) ? place_marker(col) : drop_marker
@@ -54,7 +56,7 @@ class Game
   def four_in_a_row?
     # Return whether any row in board when joined includes
     # 4 of a particular marker in a row.
-    board.any? { |row| row.join.include?(turn.marker * 4) } 
+    board.any? { |row| row.join.include?(turn.marker * 4) }
   end
 
   def four_in_a_column?
@@ -104,10 +106,12 @@ class Game
 
   def play
     choose_markers
+    show_board
 
     until game_over?
       play_turn
       change_turn unless game_over?
+      show_board
     end
 
     puts "\nThanks for playing!"
@@ -120,17 +124,35 @@ class Game
 
   private
 
-  def valid_column?(column)
-    column.between?(0, board.size - 1)
+  def intro
+    puts <<~HEREDOC
+      Welcome to Connect Four. The rules are simple.
+      Each player will first choose a marker, then 
+      take turns dropping that marker into the column
+      of their choosing.
+
+      The first player to connect four of their marker
+      horizontally, vertically, or diagonally is the
+      winner.
+
+      Have Fun!
+
+    HEREDOC
   end
-  
+
+  def valid_column?(column)
+    return false if column.nil? || !column.is_a?(Integer)
+
+    column.between?(0, @num_cols - 1)
+  end
+
   def game_over?
     finished? || full?
   end
 
   def play_turn
-    puts "It's #{turn.name}'s turn!"
-    turn.drop_marker
+    puts "\nIt's #{turn.name}'s turn!"
+    drop_marker
 
     if finished?
       puts "\n#{turn.name} wins!"
@@ -142,7 +164,7 @@ class Game
   def show_board
     puts "\n"
     @board.each do |row|
-      puts row.join
+      puts row.join('  |  ')
     end
   end
 end

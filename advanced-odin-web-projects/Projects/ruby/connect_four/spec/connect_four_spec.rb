@@ -394,7 +394,7 @@ describe Game do
         expect(partially_filled_board).to_not be_full
       end
     end
-    
+
     context 'when the board is empty' do
       subject(:empty_board) { described_class.new(6, 7) }
 
@@ -402,11 +402,20 @@ describe Game do
         expect(empty_board).to_not be_full
       end
     end
-
   end
 end
 
 describe Player do
   describe '#choose_marker' do
+    context 'when a player enters a specific index' do
+      subject(:valid_marker) { described_class.new('Player') }
+
+      before do
+        allow(valid_marker).to receive(between?).and_return(true)
+      end
+      it 'makes the players marker the character at that index' do
+        index = 5
+      end
+    end
   end
 end

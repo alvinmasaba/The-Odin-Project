@@ -20,7 +20,7 @@ class Game
     # Starting in reverse order, change the first empty space ('#')
     # to the marker, then break.
 
-    if is_full?(marker, column)
+    if full_column?(marker, column)
       puts 'This column is full. Please choose another column.'
       drop_marker(marker, column)
     else
@@ -33,7 +33,7 @@ class Game
     end
   end
 
-  def is_full?(marker, column)
+  def full_column?(marker, column)
     board.all? { |row| row[column] == marker }
   end
 
@@ -85,5 +85,9 @@ class Game
     end
     
     false
+  end
+
+  def finished?
+    four_in_a_row? || four_in_a_column? || four_diagonally?
   end
 end

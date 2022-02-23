@@ -54,7 +54,7 @@ describe Game do
       other_marker = 'O'
 
       before do
-        allow(full_col).to receive(:is_full?).and_return(true, true, false)
+        allow(full_col).to receive(:full_column?).and_return(true, true, false)
       end
 
       it 'prompts to enter a different column twice' do
@@ -67,7 +67,7 @@ describe Game do
   end
 
   # Check if column is full
-  describe '#is_full?' do
+  describe '#full_column?' do
     marker = "\u2600".encode('utf-8')
 
     context 'when column is full' do
@@ -76,7 +76,7 @@ describe Game do
       it 'returns true' do
         column = 5
         full_column.board.each { |row| row[column] = marker }
-        result = full_column.is_full?(marker, column)
+        result = full_column.full_column?(marker, column)
         expect(result).to be(true)
       end
     end
@@ -91,7 +91,7 @@ describe Game do
         partial_column.board[-3][column] = marker
         partial_column.board[-4][column] = marker
 
-        result = partial_column.is_full?(marker, column)
+        result = partial_column.full_column?(marker, column)
         expect(result).to be(false)
       end
     end
@@ -101,7 +101,7 @@ describe Game do
 
       it 'returns false' do
         column = 2
-        result = empty_column.is_full?(marker, column)
+        result = empty_column.full_column?(marker, column)
         expect(result).to be(false)
       end
     end
@@ -300,13 +300,51 @@ describe Game do
   describe '#finished?' do
     subject(:finished_game) { described_class.new(6, 7) }
 
-    context 'when there is four_in_a_row? is true' do
+    context 'when only four_in_a_row? returns true' do
       before do
         allow(finished_game).to receive(:four_in_a_row?).and_return(true)
+        allow(finished_game).to receive(:four_in_a_column?).and_return(false)
+        allow(finished_game).to receive(:four_diagonally?).and_return(false)
       end
 
       it 'returns true' do
         expect(finished_game).to be_finished
+      end
+    end
+
+    context 'when only four_in_a_column? returns true' do
+      before do
+        allow(finished_game).to receive(:four_in_a_row?).and_return(false)
+        allow(finished_game).to receive(:four_in_a_column?).and_return(true)
+        allow(finished_game).to receive(:four_diagonally?).and_return(false)
+      end
+
+      it 'returns true' do
+        expect(finished_game).to be_finished
+      end
+    end
+
+    context 'when only four_diagonally? returns true' do
+      before do
+        allow(finished_game).to receive(:four_in_a_row?).and_return(false)
+        allow(finished_game).to receive(:four_in_a_column?).and_return(false)
+        allow(finished_game).to receive(:four_diagonally?).and_return(true)
+      end
+
+      it 'returns true' do
+        expect(finished_game).to be_finished
+      end
+    end
+
+    context 'when all the conditions return false' do
+      before do
+        allow(finished_game).to receive(:four_in_a_row?).and_return(false)
+        allow(finished_game).to receive(:four_in_a_column?).and_return(false)
+        allow(finished_game).to receive(:four_diagonally?).and_return(false)
+      end
+
+      it 'returns false' do
+        expect(finished_game).to_not be_finished
       end
     end
   end

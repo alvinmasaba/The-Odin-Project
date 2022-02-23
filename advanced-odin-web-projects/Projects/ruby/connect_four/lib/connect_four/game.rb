@@ -43,4 +43,22 @@ class Game
     # 4 of a particular marker in a row.
     board.any? { |row| row.join.include?(turn.marker * 4) } 
   end
+
+  def four_in_a_column?
+    i = 0
+
+    while i < board[0].size
+      # Push to an empty array the value of each row for each given
+      # index.
+      col = []
+      board.each { |row| col << row[i] }
+
+      # Return true if it contains 4 adjacent identical markers
+      # when joined.
+      return true if col.join.include?(turn.marker * 4)
+      i += 1
+    end
+
+    false
+  end
 end

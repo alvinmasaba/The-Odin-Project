@@ -165,7 +165,51 @@ describe Game do
         expect(game_rows).to_not be_four_in_a_row
       end
     end
+  end
 
+  # Check if there are 4 adjacent identical markers in any column
+  describe '#four_in_a_column' do
+    subject(:game_columns) { described_class.new(7, 8) }
+
+    context 'when a column has exactly 4 adjacent like markers' do
+      it 'returns true' do
+        col = 1
+        game_columns.board.each_with_index { |row, i| row[col] = game_columns.turn.marker if i < 4 }
+        expect(game_columns).to be_four_in_a_column
+      end
+    end
+
+    context 'when a column has more than 4 adjacent like markers' do
+      it 'returns true' do
+        col = 1
+        game_columns.turn = game_columns.player2
+        game_columns.board.each { |row| row[col] = game_columns.turn.marker }
+        expect(game_columns).to be_four_in_a_column
+      end
+    end
+
+    context 'when a column has less than 4 adjacent like markers' do
+      it 'returns false' do
+        col = 1
+        game_columns.board.each_with_index { |row, i| row[col] = game_columns.turn.marker if i < 3 }
+        expect(game_columns).to_not be_four_in_a_column
+      end
+    end
+
+    context 'when a column has zero adjacent like markers' do
+      it 'returns false' do
+        col = 1
+        game_columns.board.each_with_index { |row, i| row[col] = game_columns.turn.marker if i.even? }
+        expect(game_columns).to_not be_four_in_a_column
+      end
+    end
+
+    context 'when a column is empty' do
+      it 'returns false' do
+        col = 1
+        expect(game_columns).to_not be_four_in_a_column
+      end
+    end
   end
 end
 

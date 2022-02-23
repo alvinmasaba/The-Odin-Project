@@ -1,4 +1,4 @@
-                Command Line Connect Four Game:
+**Command Line Connect Four Game:**
 
 Simple game which lets two users play Connect Four in the command line
 on a default 7 x 6 gameboard.

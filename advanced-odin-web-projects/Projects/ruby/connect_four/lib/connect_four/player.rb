@@ -26,7 +26,7 @@ class Player
     HEREDOC
 
     unless index.between?(0, SPECIAL_MARKERS.size - 1)
-      puts "\n#{name}, please enter the index of the marker you would like to use (0-18).\n"
+      puts "\n#{name}, please enter the index of your preferred marker.\n"
       index = gets.chomp.to_i
     end
 

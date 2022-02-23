@@ -130,7 +130,7 @@ describe Game do
     end
   end
 
-  # Check if there are 4 like markers in a row in any row
+  # Check if there are 4 adjacent identical markers in any row
   describe '#four_in_row?' do
     subject(:game_rows) { described_class.new(6, 7) }
 
@@ -208,6 +208,105 @@ describe Game do
       it 'returns false' do
         col = 1
         expect(game_columns).to_not be_four_in_a_column
+      end
+    end
+  end
+
+  # Check if there are 4 identical markers ajdacent diagonally
+  describe '#four_diagonally?' do
+    subject(:game_diagonal) { described_class.new(8, 8) }
+
+    context 'when there are exactly 4 identical markers adjacent going down and to the right' do
+      it 'returns true' do
+        x = game_diagonal.turn.marker
+        game_diagonal.board[0][0] = x
+        game_diagonal.board[1][1] = x
+        game_diagonal.board[2][2] = x
+        game_diagonal.board[3][3] = x
+
+        expect(game_diagonal).to be_four_diagonally
+      end
+    end
+
+    context 'when there are exactly 4 identical markers adjacent going down and to the left' do
+      it 'returns true' do
+        x = game_diagonal.turn.marker
+        game_diagonal.board[0][3] = x
+        game_diagonal.board[1][2] = x
+        game_diagonal.board[2][1] = x
+        game_diagonal.board[3][0] = x
+
+        expect(game_diagonal).to be_four_diagonally
+      end
+    end
+
+    context 'when there are exactly 4 identical markers adjacent going up and to the right' do
+      it 'returns true' do
+        x = game_diagonal.turn.marker
+        game_diagonal.board[4][1] = x
+        game_diagonal.board[3][2] = x
+        game_diagonal.board[2][3] = x
+        game_diagonal.board[1][4] = x
+
+        expect(game_diagonal).to be_four_diagonally
+      end
+    end
+
+    context 'when there are exactly 4 identical markers adjacent going up and to the left' do
+      it 'returns true' do
+        x = game_diagonal.turn.marker
+        game_diagonal.board[7][6] = x
+        game_diagonal.board[6][5] = x
+        game_diagonal.board[5][4] = x
+        game_diagonal.board[4][3] = x
+
+        expect(game_diagonal).to be_four_diagonally
+      end
+    end
+
+    context 'when there are more than 4 identical markers adjacent diagonally' do
+      it 'returns true' do
+        x = game_diagonal.turn.marker
+        game_diagonal.board[0][0] = x
+        game_diagonal.board[1][1] = x
+        game_diagonal.board[2][2] = x
+        game_diagonal.board[3][3] = x
+        game_diagonal.board[4][4] = x
+
+        expect(game_diagonal).to be_four_diagonally
+      end
+    end
+
+    context 'when there are less than 4 identical markers adjacent diagonally' do
+      it 'returns false' do
+        x = game_diagonal.turn.marker
+        game_diagonal.board[7][6] = x
+        game_diagonal.board[6][5] = x
+        game_diagonal.board[5][4] = x
+
+        expect(game_diagonal).to_not be_four_diagonally
+      end
+    end
+    
+    context 'when there are no identical markers adjacent diagonally' do
+      it 'returns false' do
+        x = game_diagonal.turn.marker
+        expect(game_diagonal).to_not be_four_diagonally
+      end
+    end
+  end
+
+  # check if a game is finished
+  describe '#finished?' do
+    subject(:finished_game) { described_class.new(6, 7) }
+
+    context 'when there is four_in_a_row? is true' do
+      before do
+        allow(finished_game).to receive(:four_in_a_row?).and_return(true)
+      end
+
+      it 'returns true' do
+        expect(finished_game).to be_finished
       end
     end
   end

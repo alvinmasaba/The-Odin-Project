@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 require_relative 'player'
+require_relative 'helpers'
 
 # class for playing a game of connect four
 class Game
+  include Helpers
+
   attr_accessor :player1, :player2, :board, :turn
 
   def initialize(rows = 6, cols = 7)
@@ -59,6 +62,28 @@ class Game
       i += 1
     end
 
+    false
+  end
+
+  def four_diagonally?(arr = [])
+    # Collect the [row, col] of each instance of a marker on the board.
+    board.each_with_index do |row, idx|
+      row.each_with_index do |value, col|
+        arr << [idx, col] if value == turn.marker
+      end
+    end
+
+    # For each coordinate in arr, find all its diagonal transformations.
+    arr.each do |coord|
+      TRANSFORMATIONS.each do |set|
+        set = set.map { |t| [coord[0] + t[0], coord[1] + t[1]] }
+
+        # For each diagonal, check to see if all of its coordinates are
+        # included in arr, which indicates they have an identical marker.
+        return true if set.all? { |e| arr.include?(e) }
+      end
+    end
+    
     false
   end
 end

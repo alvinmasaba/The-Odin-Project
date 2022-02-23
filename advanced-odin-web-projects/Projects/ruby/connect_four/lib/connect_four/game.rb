@@ -19,23 +19,29 @@ class Game
   def drop_marker
     # Starting in reverse order, change the first empty space ('#')
     # to the marker, then break.
-    puts 'Enter the column you would like to drop your marker in: '
+    puts 'Enter a valid column to drop your marker in: '
     col = gets.chomp.to_i
 
     if full_column?(col)
       puts 'This column is full. Please choose another column.'
       drop_marker
     else
-      board.reverse_each do |row|
-        next unless row[col] == '#'
-
-        row[col] = turn.marker
-        break
-      end
+      valid_column?(col) ? place_marker(col) : drop_marker
     end
   end
 
-  def valid_column?(column) end
+  def place_marker(col)
+    board.reverse_each do |row|
+      next unless row[col] == '#'
+
+      row[col] = turn.marker
+      break
+    end
+  end
+
+  def valid_column?(column)
+    column.between?(0, board.size - 1)
+  end
 
   def full_column?(column)
     board.all? { |row| row[column] == turn.marker }

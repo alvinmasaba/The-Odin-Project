@@ -38,5 +38,9 @@ class Game
     @turn = @turn == player1 ? player2 : player1
   end
 
-
+  def four_in_a_row?
+    # Return whether any row in board when joined includes
+    # 4 of a particular marker in a row.
+    board.any? { |row| row.join.include?(turn.marker * 4) } 
+  end
 end

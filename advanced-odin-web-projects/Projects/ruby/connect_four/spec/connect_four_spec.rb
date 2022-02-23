@@ -130,8 +130,46 @@ describe Game do
     end
   end
 
-  # 
+  # Check if there are 4 like markers in a row in any row
+  describe '#four_in_row?' do
+    subject(:game_rows) { described_class.new(6, 7) }
+
+    context 'when a row has 4 adjacent like markers' do
+      it 'returns true' do
+        game_rows.board[2] = Array.new(7) { game_rows.player1.marker }
+        expect(game_rows).to be_four_in_a_row
+      end
+    end
+
+    context 'when a row has less than 4 adjacent like markers' do
+      it 'returns false' do
+        x = game_rows.player1.marker
+        game_rows.board[5] = ['#', 'O', x, x, x, '#', x]
+        expect(game_rows).to_not be_four_in_a_row
+      end
+    end
+
+    context 'when a row has more than 4 adjacent like markers' do
+      it 'returns true' do
+        x = game_rows.player2.marker
+        game_rows.turn = game_rows.player2
+        game_rows.board[5] = ['#', 'O', x, x, x, x, x]
+        expect(game_rows).to be_four_in_a_row
+      end
+    end
+
+    context 'when a row has no adjacent like markers' do
+      it 'returns false' do
+        x = game_rows.player1.marker
+        game_rows.board[5] = ['#', 'O', x, '#', x, '#', x]
+        expect(game_rows).to_not be_four_in_a_row
+      end
+    end
+
+  end
 end
 
 describe Player do
+  describe '#choose_marker' do
+  end
 end

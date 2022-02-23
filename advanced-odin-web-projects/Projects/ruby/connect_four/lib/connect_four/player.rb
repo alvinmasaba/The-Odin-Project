@@ -20,7 +20,7 @@ class Player
     end
 
     until index.between?(0, 18)
-      puts "\nEnter the index of the marker you would like to use (0-18)."
+      puts "\n#{name}, please enter the index of the marker you would like to use (0-18)."
       index = gets.chomp.to_i
     end
     

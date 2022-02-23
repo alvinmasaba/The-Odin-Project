@@ -26,25 +26,39 @@ describe Game do
 
     context 'when the column is empty' do
       subject(:empty_col) { described_class.new(6, 7) }
+      column = '3'
+
+      before do
+        allow(empty_col).to receive(:puts)
+        allow(empty_col).to receive(:gets).and_return(column)
+        allow(empty_col).to receive(:full_column?).and_return(false)
+      end
 
       it 'places the marker in the lowest row of the chosen column' do
-        column = 3
-        empty_col.drop_marker(marker, column)
-        result = empty_col.board[-1][column]
+        empty_col.turn.marker = marker
+        empty_col.drop_marker
+        result = empty_col.board[-1][column.to_i]
         expect(result).to eql(marker)
       end
     end
 
     context 'when there are 2 makers already in the column' do
       subject(:nonempty_col) {described_class.new(6, 7) }
+      column = '3'
+
+      before do
+        allow(nonempty_col).to receive(:puts)
+        allow(nonempty_col).to receive(:gets).and_return(column)
+        allow(nonempty_col).to receive(:full_column?).and_return(false)
+      end
 
       it 'places the marker in the 3rd lowest row' do
-        column = 3
         nonempty_col.board[-1][3] = marker
         nonempty_col.board[-2][3] = marker
+        nonempty_col.turn.marker = marker
 
-        nonempty_col.drop_marker(marker, column)
-        result = nonempty_col.board[-3][column]
+        nonempty_col.drop_marker
+        result = nonempty_col.board[-3][column.to_i]
         expect(result).to eql(marker)
       end
     end
@@ -52,16 +66,18 @@ describe Game do
     context 'when a filled column is chosen twice, then an unfilled one' do
       subject(:full_col) {described_class.new(6, 7) }
       other_marker = 'O'
+      column = '4'
 
       before do
+        allow(full_col).to receive(:puts)
+        allow(full_col).to receive(:gets).and_return(column)
         allow(full_col).to receive(:full_column?).and_return(true, true, false)
       end
 
       it 'prompts to enter a different column twice' do
-        column = 3
-        full_col.board.each { |row| row[column] = other_marker }
+        full_col.board.each { |row| row[column.to_i] = other_marker }
         expect(full_col).to receive(:puts).with('This column is full. Please choose another column.').twice
-        full_col.drop_marker(marker, column)
+        full_col.drop_marker
       end
     end
   end
@@ -75,8 +91,9 @@ describe Game do
 
       it 'returns true' do
         column = 5
+        full_column.turn.marker = marker
         full_column.board.each { |row| row[column] = marker }
-        result = full_column.full_column?(marker, column)
+        result = full_column.full_column?(column)
         expect(result).to be(true)
       end
     end
@@ -86,22 +103,24 @@ describe Game do
 
       it 'returns false' do
         column = 4
+        partial_column.turn.marker = marker
         partial_column.board[-1][column] = marker
         partial_column.board[-2][column] = marker
         partial_column.board[-3][column] = marker
         partial_column.board[-4][column] = marker
 
-        result = partial_column.full_column?(marker, column)
+        result = partial_column.full_column?(column)
         expect(result).to be(false)
       end
     end
 
     context 'when column is empty' do
-      subject(:empty_column) { described_class.new(6,7) }
+      subject(:empty_column) { described_class.new(6, 7) }
 
       it 'returns false' do
         column = 2
-        result = empty_column.full_column?(marker, column)
+        empty_column.turn.marker = marker
+        result = empty_column.full_column?(column)
         expect(result).to be(false)
       end
     end

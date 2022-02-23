@@ -16,25 +16,29 @@ class Game
     @turn = player1
   end
 
-  def drop_marker(marker, column)
+  def drop_marker
     # Starting in reverse order, change the first empty space ('#')
     # to the marker, then break.
+    puts 'Enter the column you would like to drop your marker in: '
+    col = gets.chomp.to_i
 
-    if full_column?(marker, column)
+    if full_column?(col)
       puts 'This column is full. Please choose another column.'
-      drop_marker(marker, column)
+      drop_marker
     else
       board.reverse_each do |row|
-        next unless row[column] == '#'
-        
-        row[column] = marker
+        next unless row[col] == '#'
+
+        row[col] = turn.marker
         break
       end
     end
   end
 
-  def full_column?(marker, column)
-    board.all? { |row| row[column] == marker }
+  def valid_column?(column) end
+
+  def full_column?(column)
+    board.all? { |row| row[column] == turn.marker }
   end
 
   def full?
@@ -63,6 +67,7 @@ class Game
       # Return true if it contains 4 adjacent identical markers
       # when joined.
       return true if col.join.include?(turn.marker * 4)
+
       i += 1
     end
 
@@ -87,13 +92,31 @@ class Game
         return true if set.all? { |e| arr.include?(e) }
       end
     end
-    
+
     false
   end
 
   def finished?
     four_in_a_row? || four_in_a_column? || four_diagonally?
   end
-  
-  
+
+  def play
+    choose_markers
+
+    until finished? || full?
+      turn.drop_marker
+      if finished?
+        puts "\n#{turn.name} wins!"
+      elsif full?
+        puts "\nThe board is full. There is NO winner."
+      else
+        change_turn
+      end
+    end
+  end
+
+  def choose_markers
+    @player1.choose_marker
+    @player2.choose_marker
+  end
 end

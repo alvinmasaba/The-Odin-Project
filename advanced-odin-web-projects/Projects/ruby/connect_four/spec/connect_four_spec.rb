@@ -64,19 +64,19 @@ describe Game do
     end
 
     context 'when a filled column is chosen twice, then an unfilled one' do
-      subject(:full_col) {described_class.new(6, 7) }
+      subject(:full_col) { described_class.new(6, 7) }
       other_marker = 'O'
       column = '4'
 
       before do
-        allow(full_col).to receive(:puts)
+        allow(full_col).to receive(:puts).with("\nEnter a valid column to drop your marker in:")
         allow(full_col).to receive(:gets).and_return(column)
         allow(full_col).to receive(:full_column?).and_return(true, true, false)
       end
 
       it 'prompts to enter a different column twice' do
         full_col.board.each { |row| row[column.to_i] = other_marker }
-        expect(full_col).to receive(:puts).with('This column is full. Please choose another column.').twice
+        expect(full_col).to receive(:puts).with("\nThis column is full. Please choose another column.").twice
         full_col.drop_marker
       end
     end
@@ -225,7 +225,6 @@ describe Game do
 
     context 'when a column is empty' do
       it 'returns false' do
-        col = 1
         expect(game_columns).to_not be_four_in_a_column
       end
     end
@@ -306,10 +305,10 @@ describe Game do
         expect(game_diagonal).to_not be_four_diagonally
       end
     end
-    
+
     context 'when there are no identical markers adjacent diagonally' do
       it 'returns false' do
-        x = game_diagonal.turn.marker
+        game_diagonal.turn.marker
         expect(game_diagonal).to_not be_four_diagonally
       end
     end
@@ -400,21 +399,6 @@ describe Game do
 
       it 'returns false' do
         expect(empty_board).to_not be_full
-      end
-    end
-  end
-end
-
-describe Player do
-  describe '#choose_marker' do
-    context 'when a player enters a specific index' do
-      subject(:valid_marker) { described_class.new('Player') }
-
-      before do
-        allow(valid_marker).to receive(between?).and_return(true)
-      end
-      it 'makes the players marker the character at that index' do
-        index = 5
       end
     end
   end

@@ -105,6 +105,7 @@ class Game
   end
 
   def play
+    sleep(2)
     choose_markers
     show_board
 
@@ -112,6 +113,7 @@ class Game
       play_turn
       change_turn unless game_over?
       show_board
+      sleep(2)
     end
 
     puts "\nThanks for playing!"
@@ -127,7 +129,7 @@ class Game
   def intro
     puts <<~HEREDOC
       Welcome to Connect Four. The rules are simple.
-      Each player will first choose a marker, then 
+      Each player will first choose a marker, then
       take turns dropping that marker into the column
       of their choosing.
 
@@ -135,7 +137,23 @@ class Game
       horizontally, vertically, or diagonally is the
       winner.
 
-      Have Fun!
+      Empty spaces are represented by '#' and the column
+      numbers start at 0 increasing from left to right as
+      follows:
+
+      0   1   2   3   4   5   6
+      # | # | # | # | # | # | #
+      # | # | # | # | # | # | #
+      # | # | # | # | # | # | #
+      # | # | # | # | # | # | #
+      # | # | # | # | # | # | #
+      # | # | # | # | # | # | #
+
+      The player who's turn it is will be prompted to enter
+      a column. If the column is full, or not on the board,
+      they will be prompted to enter a valid column.
+
+      That's it! Have Fun!
 
     HEREDOC
   end
@@ -164,7 +182,7 @@ class Game
   def show_board
     puts "\n"
     @board.each do |row|
-      puts row.join('  |  ')
+      puts row.join(' | ')
     end
   end
 end

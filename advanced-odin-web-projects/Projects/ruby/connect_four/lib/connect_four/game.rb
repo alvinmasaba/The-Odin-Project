@@ -106,23 +106,43 @@ class Game
     four_in_a_row? || four_in_a_column? || four_diagonally?
   end
 
+  def game_over?
+    finished? || full?
+  end
+
   def play
     choose_markers
 
-    until finished? || full?
-      turn.drop_marker
-      if finished?
-        puts "\n#{turn.name} wins!"
-      elsif full?
-        puts "\nThe board is full. There is NO winner."
-      else
-        change_turn
-      end
+    until game_over?
+      play_turn
+      change_turn unless game_over?
     end
+
+    puts "\nThanks for playing!"
   end
 
   def choose_markers
     @player1.choose_marker
     @player2.choose_marker
+  end
+
+  private
+
+  def play_turn
+    puts "It's #{turn.name}'s turn!"
+    turn.drop_marker
+
+    if finished?
+      puts "\n#{turn.name} wins!"
+    elsif full?
+      puts "\nThe board is full. There is NO winner."
+    end
+  end
+
+  def show_board
+    puts "\n"
+    @board.each do |row|
+      puts row.join
+    end
   end
 end

@@ -94,4 +94,6 @@ class Game
   def finished?
     four_in_a_row? || four_in_a_column? || four_diagonally?
   end
+  
+  
 end

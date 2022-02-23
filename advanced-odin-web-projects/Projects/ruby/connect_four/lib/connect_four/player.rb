@@ -14,7 +14,17 @@ class Player
     @marker = marker
   end
 
-  def choose_marker
+  def choose_marker(index = nil)
+    SPECIAL_MARKERS.each_with_index do |e, i|
+      p "Index #{i}: #{e}"
+    end
+
+    until index.between?(0, 18)
+      puts "\nEnter the index of the marker you would like to use (0-18)."
+      index = gets.chomp.to_i
+    end
+    
+    @marker = SPECIAL_MARKERS[index]
   end
 end
   

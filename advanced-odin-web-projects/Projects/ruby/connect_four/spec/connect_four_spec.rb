@@ -337,16 +337,53 @@ describe Game do
     end
 
     context 'when all the conditions return false' do
+      subject(:unfinished_game) { described_class.new(6, 7) }
+
       before do
-        allow(finished_game).to receive(:four_in_a_row?).and_return(false)
-        allow(finished_game).to receive(:four_in_a_column?).and_return(false)
-        allow(finished_game).to receive(:four_diagonally?).and_return(false)
+        allow(unfinished_game).to receive(:four_in_a_row?).and_return(false)
+        allow(unfinished_game).to receive(:four_in_a_column?).and_return(false)
+        allow(unfinished_game).to receive(:four_diagonally?).and_return(false)
       end
 
       it 'returns false' do
-        expect(finished_game).to_not be_finished
+        expect(unfinished_game).to_not be_finished
       end
     end
+  end
+
+  #check if the board is full
+  describe '#full?' do
+    marker = "\u2600".encode('utf-8')
+
+    context 'when the board is full' do
+      subject(:full_board) { described_class.new(6, 7) }
+
+      it 'returns true' do
+        full_board.board.each_with_index { |_, i| full_board.board[i] = Array.new(7) { marker } }
+        expect(full_board).to be_full
+      end
+    end
+
+    context 'when the board is partially filled' do
+      subject(:partially_filled_board) { described_class.new(6, 7) }
+
+      it 'returns false' do
+        partially_filled_board.board.each_with_index do |_, i|
+          partially_filled_board.board[i] = Array.new(7) { marker } if i < 5
+        end
+
+        expect(partially_filled_board).to_not be_full
+      end
+    end
+    
+    context 'when the board is empty' do
+      subject(:empty_board) { described_class.new(6, 7) }
+
+      it 'returns false' do
+        expect(empty_board).to_not be_full
+      end
+    end
+
   end
 end
 

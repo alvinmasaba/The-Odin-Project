@@ -37,6 +37,10 @@ class Game
     board.all? { |row| row[column] == marker }
   end
 
+  def full?
+    board.all? { |row| row.none?('#') }
+  end
+
   def change_turn
     @turn = @turn == player1 ? player2 : player1
   end

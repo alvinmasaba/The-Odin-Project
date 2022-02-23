@@ -39,10 +39,6 @@ class Game
     end
   end
 
-  def valid_column?(column)
-    column.between?(0, board.size - 1)
-  end
-
   def full_column?(column)
     board.all? { |row| row[column] == turn.marker }
   end
@@ -106,10 +102,6 @@ class Game
     four_in_a_row? || four_in_a_column? || four_diagonally?
   end
 
-  def game_over?
-    finished? || full?
-  end
-
   def play
     choose_markers
 
@@ -127,6 +119,14 @@ class Game
   end
 
   private
+
+  def valid_column?(column)
+    column.between?(0, board.size - 1)
+  end
+  
+  def game_over?
+    finished? || full?
+  end
 
   def play_turn
     puts "It's #{turn.name}'s turn!"

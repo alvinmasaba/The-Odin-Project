@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 require_relative 'player'
-require_relative 'helpers'
+require_relative 'constants'
 
 # class for playing a game of connect four
 class Game
-  include Helpers
+  include Constants
 
-  attr_accessor :player1, :player2, :board, :turn
+  attr_accessor :player1, :player2, :board, :turn, :num_cols
 
   def initialize(rows = 6, cols = 7)
     @player1 = Player.new('Player 1')
@@ -78,13 +78,19 @@ class Game
     false
   end
 
-  def four_diagonally?(arr = [])
+  def find_marker(arr = [])
     # Collect the [row, col] of each instance of a marker on the board.
     board.each_with_index do |row, idx|
       row.each_with_index do |value, col|
         arr << [idx, col] if value == turn.marker
       end
     end
+
+    arr
+  end
+
+  def four_diagonally?
+    arr = find_marker
 
     # For each coordinate in arr, find all its diagonal transformations.
     arr.each do |coord|
